@@ -1,0 +1,492 @@
+:root {
+  color-scheme: dark;
+  --bg: #171717;
+  --panel: #292929;
+  --panel-drag: #343434;
+  --text: #f6f3ec;
+  --muted: #c7c7c7;
+  --gold: #dcc37d;
+  --elite: #ffca2f;
+  --normal: #ececec;
+  --green: #28d17c;
+  --yellow: #ffd24a;
+  --red: #ff5f56;
+  --button: #f4f4f4;
+  --button-text: #171717;
+  --danger: #e84b40;
+  --gap: 5px;
+  --button-height: 36px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 30% 12%, rgba(255, 255, 255, .05), transparent 25rem),
+    linear-gradient(135deg, #202020, var(--bg));
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+button,
+input,
+select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: var(--button-height);
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  background: var(--button);
+  color: var(--button-text);
+  font-weight: 800;
+  line-height: 1;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input {
+  padding: 0 10px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .84);
+  color: var(--text);
+  outline: none;
+}
+
+input::placeholder {
+  color: #d6d6d6;
+}
+
+input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(220, 195, 125, .22);
+}
+
+select {
+  padding: 0 8px;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .84);
+  color: var(--text);
+  outline: none;
+  appearance: none;
+}
+
+select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(220, 195, 125, .22);
+}
+
+.app {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: max(6px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom));
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr var(--button-height);
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 7px;
+}
+
+h1 {
+  margin: 0;
+  color: var(--gold);
+  font-size: 25px;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 1px 2px 3px #000;
+  letter-spacing: 0;
+}
+
+.icon-button {
+  height: var(--button-height);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: 21px;
+}
+
+.enemy-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: var(--gap);
+  margin-bottom: 7px;
+}
+
+.enemy-form input:first-child,
+.add-button {
+  grid-column: 1 / -1;
+}
+
+.monster-search {
+  position: relative;
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.monster-search::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 0;
+  display: grid;
+  height: var(--button-height);
+  place-items: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.monster-search input {
+  padding-right: 34px;
+}
+
+.monster-suggestions {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 3px);
+  left: 0;
+  right: 0;
+  display: none;
+  max-height: 188px;
+  overflow-y: auto;
+  border: 1px solid rgba(220, 195, 125, .8);
+  border-radius: 6px;
+  background: #303030;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .45);
+}
+
+.monster-suggestions.open {
+  display: grid;
+}
+
+.monster-suggestion {
+  height: 34px;
+  justify-content: flex-start;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  text-align: left;
+}
+
+.monster-suggestion:active,
+.monster-suggestion.active {
+  background: rgba(220, 195, 125, .24);
+}
+
+.add-button {
+  background: #23c76b;
+  color: #fff;
+  font-size: 17px;
+}
+
+.enemy-list {
+  display: grid;
+  gap: 7px;
+}
+
+.enemy-group {
+  display: grid;
+  gap: 6px;
+  padding: 7px;
+  border-radius: 7px;
+  background: rgba(42, 42, 42, .94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+.enemy-group-title {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: var(--gold);
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-shadow: 1px 1px 2px #000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.enemy-group-title .enemy-group-indicator {
+  width: 1ch;
+  text-align: center;
+}
+
+.enemy-group-title .enemy-group-count {
+  margin-left: 4px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.enemy-group-list {
+  display: grid;
+  gap: var(--gap);
+}
+
+.enemy-group-list[hidden] {
+  display: none;
+}
+
+.enemy {
+  display: grid;
+  gap: var(--gap);
+  padding: 6px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .03);
+}
+
+.enemy.dead {
+  opacity: .54;
+}
+
+.enemy.dragging {
+  opacity: .4;
+}
+
+.enemy.drag-over {
+  background: var(--panel-drag);
+  outline: 2px solid rgba(220, 195, 125, .55);
+}
+
+.enemy-top {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+}
+
+.monster-attributes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.monster-attributes[hidden] {
+  display: none;
+}
+
+.monster-attribute {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2em;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.drag-handle,
+.enemy-ordinal,
+.rank-toggle,
+.health-stat,
+.shield-stat {
+  flex: 0 0 auto;
+}
+
+.health-stat,
+.shield-stat {
+  white-space: nowrap;
+}
+
+.shield-stat {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.drag-handle {
+  width: var(--button-height);
+  height: var(--button-height);
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 27px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.rank-toggle {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.rank-toggle.elite {
+  color: var(--elite);
+}
+
+.enemy-ordinal {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.enemy-ordinal,
+.rank-toggle {
+  flex: 0 0 auto;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.health-value.health-high {
+  color: var(--green);
+}
+
+.health-value.health-mid {
+  color: var(--yellow);
+}
+
+.health-value.health-low,
+.health-value.health-dead {
+  color: var(--red);
+}
+
+.enemy-actions {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.enemy-actions .damage-input {
+  grid-column: span 2;
+}
+
+.damage-input {
+  background: #fff;
+  border-color: #fff;
+  color: #222;
+}
+
+.damage-input::placeholder {
+  color: #777;
+}
+
+.delete-button {
+  color: var(--danger);
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.quick-actions button {
+  padding: 0 4px;
+  font-size: 16px;
+}
+
+@media (min-width: 560px) {
+  .app {
+    width: min(100%, 540px);
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --gap: 4px;
+    --button-height: 34px;
+  }
+
+  .app {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .enemy {
+    padding: 6px;
+  }
+
+  .enemy-top {
+    gap: 4px;
+  }
+
+  .drag-handle {
+    font-size: 25px;
+  }
+
+  .rank-toggle {
+    width: 28px;
+    height: 28px;
+    font-size: 19px;
+  }
+
+  .enemy-ordinal {
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+  }
+
+  .stat {
+    font-size: 15px;
+  }
+
+  .monster-attributes {
+    gap: 3px;
+  }
+
+  .monster-attribute {
+    font-size: 15px;
+  }
+
+  button,
+  input,
+  select {
+    border-radius: 5px;
+  }
+}

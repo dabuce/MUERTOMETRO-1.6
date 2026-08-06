@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171717">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MUERTOMETRO">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>MUERTOMETRO</title>
+</head>
+<body>
+  <main class="app" aria-label="Muertometro">
+    <header class="topbar">
+      <h1><span aria-hidden="true">💀</span> MUERTOMETRO <span aria-hidden="true">💀</span></h1>
+      <button class="icon-button" id="fullscreenButton" type="button" aria-label="Pantalla completa" title="Pantalla completa">⛶</button>
+    </header>
+
+    <form class="enemy-form" id="enemyForm" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="monster-search">
+        <input id="nameInput" name="enemy-name" type="text" placeholder="Nombre" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="next" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="monsterSuggestions">
+        <div class="monster-suggestions" id="monsterSuggestions" role="listbox"></div>
+      </div>
+      <select id="levelInput" name="scenario-level" autocomplete="off" aria-label="Nivel">
+        <option value="0">Nivel 0</option>
+        <option value="1">Nivel 1</option>
+        <option value="2">Nivel 2</option>
+        <option value="3">Nivel 3</option>
+        <option value="4">Nivel 4</option>
+        <option value="5">Nivel 5</option>
+        <option value="6">Nivel 6</option>
+        <option value="7">Nivel 7</option>
+      </select>
+      <input id="healthInput" name="enemy-health" type="number" min="1" step="1" inputmode="numeric" placeholder="Vida" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input id="shieldInput" name="enemy-shield" type="number" min="0" step="1" inputmode="numeric" value="0" placeholder="Escudo" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input id="quantityInput" name="enemy-quantity" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" placeholder="Cant." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="add-button" type="submit">Añadir enemigo</button>
+    </form>
+
+    <section class="enemy-list" id="enemyList" aria-live="polite"></section>
+  </main>
+
+  <template id="enemyTemplate">
+    <article class="enemy" draggable="true">
+      <div class="enemy-top">
+        <button class="drag-handle" type="button" aria-label="Reordenar enemigo" title="Reordenar">☰</button>
+        <span class="enemy-ordinal" aria-hidden="true">①</span>
+        <button class="rank-toggle" type="button" aria-pressed="false" aria-label="Marcar como élite" title="Marcar como élite">⚪</button>
+        <span class="stat health-stat"><span aria-hidden="true">❤</span> <span class="health-value"></span></span>
+        <div class="monster-attributes" aria-hidden="true"></div>
+        <span class="stat shield-stat"><span aria-hidden="true">🛡</span> <span class="shield-value"></span></span>
+      </div>
+
+      <div class="enemy-actions">
+        <input class="damage-input" type="number" min="0" step="1" inputmode="numeric" placeholder="Daño" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Daño">
+        <button class="attack-button" type="button" aria-label="Aplicar daño">⚔️</button>
+        <button class="heal-button" type="button" aria-label="Curar 1">❤ +1</button>
+        <button class="delete-button" type="button" aria-label="Eliminar enemigo">🗑</button>
+      </div>
+
+      <div class="quick-actions" aria-label="Daño rápido">
+        <button type="button" data-damage="1">-1</button>
+        <button type="button" data-damage="2">-2</button>
+        <button type="button" data-damage="3">-3</button>
+        <button type="button" data-damage="5">-5</button>
+        <button type="button" data-damage="10">-10</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

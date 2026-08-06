@@ -1,0 +1,26 @@
+{
+  "name": "MUERTOMETRO",
+  "short_name": "MUERTOMETRO",
+  "description": "Control tactico de vida para enemigos de Gloomhaven",
+  "id": "./",
+  "scope": "./",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#171717",
+  "theme_color": "#171717",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
