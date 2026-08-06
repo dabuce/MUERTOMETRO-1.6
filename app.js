@@ -15,9 +15,9 @@ const ATTRIBUTE_ICONS = new Map([
   ["Retaliate", "✊"],
   ["Push", "➡️"],
   ["Pull", "↩️"],
-  ["Pierce", "🏹"],
+  ["Pierce", "🗡️"],
   ["Target", "🎯"],
-  ["Range", "📏"]
+  ["Range", "🏹"]
 ]);
 
 const state = {
