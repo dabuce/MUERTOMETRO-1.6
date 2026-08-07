@@ -97,6 +97,11 @@ elements.list.addEventListener("click", event => {
 
     if (button.classList.contains("drag-handle")) return;
 
+    if (button.classList.contains("enemy-details-toggle")) {
+      toggleEnemyDetails(enemy.id);
+      return;
+    }
+
     if (button.classList.contains("enemy-ordinal-toggle")) {
       setEnemyElite(enemy, !enemy.elite);
       updateEnemy(enemy);
@@ -123,13 +128,6 @@ elements.list.addEventListener("click", event => {
       applyDamage(enemy.id, Number(button.dataset.damage));
       return;
     }
-
-    toggleEnemyDetails(enemy.id);
-    return;
-  }
-
-  if (enemyNode && !event.target.closest("input, select, textarea, label")) {
-    toggleEnemyDetails(enemyNode.dataset.id);
   }
 });
 
@@ -513,6 +511,7 @@ function updateEnemy(enemy) {
 
   const eliteToggle = node.querySelector(".enemy-ordinal-toggle");
   const body = node.querySelector(".enemy-body");
+  const detailsToggle = node.querySelector(".enemy-details-toggle");
   const healthClass = getHealthClass(enemy.vida, enemy.max);
   const attributesNode = node.querySelector(".monster-attributes");
   const isExpanded = state.selectedEnemyId === enemy.id;
@@ -529,13 +528,48 @@ function updateEnemy(enemy) {
   node.querySelector(".health-value").className = `health-value ${healthClass}`;
   renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
-  if (body) body.hidden = !isExpanded;
+  syncEnemyBodyState(body, detailsToggle, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
 function toggleEnemyDetails(enemyId) {
   state.selectedEnemyId = state.selectedEnemyId === enemyId ? null : enemyId;
   for (const enemy of state.enemies) updateEnemy(enemy);
+}
+
+function syncEnemyBodyState(body, detailsToggle, isExpanded) {
+  if (!body) return;
+
+  if (body._hideTimer) {
+    window.clearTimeout(body._hideTimer);
+    body._hideTimer = null;
+  }
+
+  if (detailsToggle) {
+    detailsToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+    detailsToggle.setAttribute("aria-label", isExpanded ? "Ocultar controles del enemigo" : "Mostrar controles del enemigo");
+    detailsToggle.title = isExpanded ? "Ocultar controles del enemigo" : "Mostrar controles del enemigo";
+  }
+
+  if (isExpanded) {
+    body.hidden = false;
+    requestAnimationFrame(() => {
+      if (!body.hidden) body.classList.add("is-open");
+    });
+    return;
+  }
+
+  const wasOpen = body.classList.contains("is-open") || !body.hidden;
+  body.classList.remove("is-open");
+  if (!wasOpen) {
+    body.hidden = true;
+    return;
+  }
+
+  body._hideTimer = window.setTimeout(() => {
+    body.hidden = true;
+    body._hideTimer = null;
+  }, 220);
 }
 
 function getHealthClass(current, max) {

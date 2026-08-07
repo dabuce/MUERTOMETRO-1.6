@@ -59,22 +59,25 @@
         <span class="stat health-stat"><span aria-hidden="true">❤</span> <span class="health-value"></span></span>
         <div class="monster-attributes" aria-hidden="true"></div>
         <span class="stat shield-stat"><span aria-hidden="true">🛡</span> <span class="shield-value"></span></span>
+        <button class="enemy-details-toggle" type="button" aria-expanded="false" aria-label="Mostrar controles del enemigo" title="Mostrar controles del enemigo">☰</button>
       </div>
 
       <div class="enemy-body" hidden>
-        <div class="enemy-actions">
-          <input class="damage-input" type="number" min="0" step="1" inputmode="numeric" placeholder="Daño" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Daño">
-          <button class="attack-button" type="button" aria-label="Aplicar daño">⚔️</button>
-          <button class="heal-button" type="button" aria-label="Curar 1">❤ +1</button>
-          <button class="delete-button" type="button" aria-label="Eliminar enemigo">🗑</button>
-        </div>
+        <div class="enemy-body-inner">
+          <div class="enemy-actions">
+            <input class="damage-input" type="number" min="0" step="1" inputmode="numeric" placeholder="Daño" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Daño">
+            <button class="attack-button" type="button" aria-label="Aplicar daño">⚔️</button>
+            <button class="heal-button" type="button" aria-label="Curar 1">❤ +1</button>
+            <button class="delete-button" type="button" aria-label="Eliminar enemigo">🗑</button>
+          </div>
 
-        <div class="quick-actions" aria-label="Daño rápido">
-          <button type="button" data-damage="1">-1</button>
-          <button type="button" data-damage="2">-2</button>
-          <button type="button" data-damage="3">-3</button>
-          <button type="button" data-damage="5">-5</button>
-          <button type="button" data-damage="10">-10</button>
+          <div class="quick-actions" aria-label="Daño rápido">
+            <button type="button" data-damage="1">-1</button>
+            <button type="button" data-damage="2">-2</button>
+            <button type="button" data-damage="3">-3</button>
+            <button type="button" data-damage="5">-5</button>
+            <button type="button" data-damage="10">-10</button>
+          </div>
         </div>
       </div>
     </article>
