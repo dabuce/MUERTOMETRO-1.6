@@ -26,7 +26,8 @@ const state = {
   monsterByName: new Map(),
   nodes: new Map(),
   pointerDragId: null,
-  nativeDragId: null
+  nativeDragId: null,
+  deleteUndo: null
 };
 
 normalizeEnemyOrdinals(state.enemies);
@@ -42,7 +43,10 @@ const elements = {
   quantity: document.getElementById("quantityInput"),
   list: document.getElementById("enemyList"),
   template: document.getElementById("enemyTemplate"),
-  fullscreen: document.getElementById("fullscreenButton")
+  fullscreen: document.getElementById("fullscreenButton"),
+  snackbar: document.getElementById("undoSnackbar"),
+  snackbarMessage: document.getElementById("undoSnackbarMessage"),
+  snackbarUndo: document.getElementById("undoSnackbarUndo")
 };
 
 renderList();
@@ -74,6 +78,7 @@ document.addEventListener("pointerdown", event => {
 
 elements.level.addEventListener("change", fillStatsFromSelection);
 elements.fullscreen.addEventListener("click", toggleFullscreen);
+elements.snackbarUndo.addEventListener("click", undoDeleteEnemy);
 
 elements.list.addEventListener("click", event => {
   const button = event.target.closest("button");
@@ -413,12 +418,16 @@ function heal(enemyId, amount) {
 }
 
 function deleteEnemy(enemyId) {
-  const enemy = findEnemy(enemyId);
+  const index = state.enemies.findIndex(enemy => enemy.id === enemyId);
+  const enemy = index >= 0 ? state.enemies[index] : null;
   if (!enemy) return;
 
-  state.enemies = state.enemies.filter(item => item.id !== enemyId);
+  hideDeleteUndoSnackbar();
+  const snapshot = cloneEnemy(enemy);
+  state.enemies.splice(index, 1);
   renderList();
   saveEnemies();
+  showDeleteUndoSnackbar(snapshot, index);
 }
 
 function reorderEnemy(sourceId, targetId) {
@@ -726,6 +735,54 @@ function clearDragState() {
   });
 }
 
+function showDeleteUndoSnackbar(enemySnapshot, index) {
+  if (!enemySnapshot) return;
+
+  elements.snackbarMessage.textContent = `${enemySnapshot.nombre} eliminado`;
+  elements.snackbarUndo.dataset.id = enemySnapshot.id;
+  elements.snackbar.classList.add("visible");
+
+  const timer = window.setTimeout(() => {
+    if (state.deleteUndo?.enemy?.id !== enemySnapshot.id) return;
+    hideDeleteUndoSnackbar();
+  }, 3000);
+
+  state.deleteUndo = {
+    enemy: enemySnapshot,
+    index,
+    timer
+  };
+}
+
+function undoDeleteEnemy() {
+  const pending = state.deleteUndo;
+  if (!pending) return;
+
+  clearTimeout(pending.timer);
+  const index = clamp(pending.index, 0, state.enemies.length);
+  state.enemies.splice(index, 0, cloneEnemy(pending.enemy));
+  hideDeleteUndoSnackbar();
+  renderList();
+  saveEnemies();
+}
+
+function hideDeleteUndoSnackbar() {
+  if (state.deleteUndo?.timer) {
+    clearTimeout(state.deleteUndo.timer);
+  }
+  state.deleteUndo = null;
+  elements.snackbar.classList.remove("visible");
+  elements.snackbarUndo.dataset.id = "";
+  elements.snackbarMessage.textContent = "";
+}
+
+function cloneEnemy(enemy) {
+  if (typeof structuredClone === "function") {
+    return structuredClone(enemy);
+  }
+  return JSON.parse(JSON.stringify(enemy));
+}
+
 async function toggleFullscreen() {
   try {
     if (!document.fullscreenElement) {
@@ -734,6 +791,6 @@ async function toggleFullscreen() {
       await document.exitFullscreen();
     }
   } catch {
-    alert("Tu navegador no permite pantalla completa desde este modo.");
+    console.warn("No se pudo activar la pantalla completa.");
   }
 }

@@ -19,7 +19,7 @@
   <main class="app" aria-label="Muertometro">
     <header class="topbar">
       <h1><span aria-hidden="true">💀</span> MUERTOMETRO <span aria-hidden="true">💀</span></h1>
-      <button class="icon-button" id="fullscreenButton" type="button" aria-label="Pantalla completa" title="Pantalla completa">⛶</button>
+      <button class="icon-button" id="fullscreenButton" type="button" aria-label="Pantalla completa" title="Pantalla completa"> </button>
     </header>
 
     <form class="enemy-form" id="enemyForm" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -45,6 +45,11 @@
 
     <section class="enemy-list" id="enemyList" aria-live="polite"></section>
   </main>
+
+  <div class="undo-snackbar" id="undoSnackbar" role="status" aria-live="polite" aria-atomic="true">
+    <span class="undo-snackbar__message" id="undoSnackbarMessage"></span>
+    <button class="undo-snackbar__action" id="undoSnackbarUndo" type="button">Deshacer</button>
+  </div>
 
   <template id="enemyTemplate">
     <article class="enemy" draggable="true">
