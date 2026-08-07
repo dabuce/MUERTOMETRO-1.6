@@ -1,139 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 233.4 233.4">
+  <!-- Generator: Adobe Illustrator 29.7.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 8)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+      }
 
-<svg
-   width="82.336998mm"
-   height="82.336998mm"
-   viewBox="0 0 82.336999 82.336997"
-   version="1.1"
-   id="svg5"
-   sodipodi:docname="attack.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview30"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:document-units="mm"
-     showgrid="false"
-     inkscape:zoom="2.5361922"
-     inkscape:cx="132.48207"
-     inkscape:cy="154.36527"
-     inkscape:window-width="1854"
-     inkscape:window-height="1011"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg5"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <defs
-     id="defs2">
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath1104">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path1102" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath1286">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path1284" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath1470">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path1468" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath1656">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path1654" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath1844">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path1842" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath2265">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path2263" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath2512">
-      <path
-         d="M 0,600 H 600 V 0 H 0 Z"
-         id="path2510" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath2740">
-      <path
-         d="M 0,300 H 300 V 0 H 0 Z"
-         id="path2738" />
+      .st1 {
+        clip-path: url(#clippath);
+      }
+
+      .st2 {
+        fill: #343434;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st0" x="-33.3" y="-32.87" width="300" height="300"/>
     </clipPath>
   </defs>
-  <g
-     id="layer1"
-     transform="translate(105.74693,10.126196)"
-     style="fill:#000000">
-    <g
-       id="g2728"
-       transform="matrix(0.35277777,0,0,-0.35277777,-117.49512,84.110095)"
-       style="fill:#000000">
-      <g
-         id="g2730"
-         transform="translate(101.892,54.0625)"
-         style="fill:#000000">
-        <path
-           d="m 0,0 -6.907,-4.933 -50.887,46.962 4.363,7.281 13.994,-12.914 87.349,94.649 29.862,6.833 -4.419,-30.314 -87.348,-94.65 z"
-           style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="path2732" />
-      </g>
-      <g
-         id="g2734"
-         style="fill:#000000">
-        <g
-           id="g2736"
-           clip-path="url(#clipPath2740)"
-           style="fill:#000000">
-          <g
-             id="g2742"
-             transform="translate(72.1644,62.1807)"
-             style="fill:#000000">
-            <path
-               d="m 0,0 -25.629,-27.772 c 0,0 -4.416,-0.636 -8.964,3.561 -4.548,4.196 -4.266,8.648 -4.266,8.648 L -13.23,12.21 Z"
-               style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="path2744" />
-          </g>
-          <g
-             id="g2746"
-             transform="translate(96.7475,153.3145)"
-             style="fill:#000000">
-            <path
-               d="m 0,0 10.053,6.239 -18.657,23.442 38.414,4.15 1.734,34.457 22.403,-14.066 35.487,17.186 4.746,-39.734 26.798,-6.716 -22.185,-13.186 15.945,-28.411 -30.957,0.945 -2.706,-38.642 -24.357,18.687 -5.471,-10.492 42.111,-63.102 6.44,76.617 62.587,-21.949 -38.566,61.081 46.132,21.026 -56.652,19.033 -3.414,65.747 L 54.943,73.555 9.382,106.114 11.979,51.79 -62.572,48.581 Z"
-               style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="path2748" />
+  <g id="svg5" inkscape:version="1.2.2 (b0a8486541, 2022-12-01)">
+    <sodipodi:namedview id="namedview30" bordercolor="#666666" borderopacity="1.0" inkscape:current-layer="svg5" inkscape:cx="132.48207" inkscape:cy="154.36527" inkscape:deskcolor="#d1d1d1" inkscape:document-units="mm" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:showpageshadow="2" inkscape:window-height="1011" inkscape:window-maximized="1" inkscape:window-width="1854" inkscape:window-x="0" inkscape:window-y="0" inkscape:zoom="2.5361922" pagecolor="#ffffff" showgrid="false"/>
+    <g id="layer1">
+      <g id="g2728">
+        <g id="g2730">
+          <path id="path2732" class="st2" d="M68.59,213.06l-6.91,4.93-50.89-46.96,4.36-7.28,13.99,12.91,87.35-94.65,29.86-6.83-4.42,30.31-87.35,94.65,13.99,12.91Z"/>
+        </g>
+        <g id="g2734">
+          <g class="st1">
+            <g id="g2736">
+              <g id="g2742">
+                <path id="path2744" class="st2" d="M38.86,204.95l-25.63,27.77s-4.42.64-8.96-3.56C-.28,224.96,0,220.51,0,220.51l25.63-27.77,13.23,12.21Z"/>
+              </g>
+              <g id="g2746">
+                <path id="path2748" class="st2" d="M63.45,113.81l10.05-6.24-18.66-23.44,38.41-4.15,1.73-34.46,22.4,14.07,35.49-17.19,4.75,39.73,26.8,6.72-22.18,13.19,15.94,28.41-30.96-.94-2.71,38.64-24.36-18.69-5.47,10.49,42.11,63.1,6.44-76.62,62.59,21.95-38.57-61.08,46.13-21.03-56.65-19.03-3.41-65.75-54.94,38.76L72.83,7.7l2.6,54.32L.87,65.23l62.57,48.58Z"/>
+              </g>
+            </g>
           </g>
         </g>
       </g>
