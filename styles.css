@@ -117,20 +117,17 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .35em;
-  color: var(--gold);
-  font-size: 25px;
-  line-height: 1;
-  text-align: center;
-  text-shadow: 1px 2px 3px #000;
-  letter-spacing: 0;
+  width: 100%;
+  line-height: 0;
 }
 
-.title-icon {
-  width: 1em;
-  height: 1em;
-  flex: 0 0 auto;
+.header-logo {
   display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .icon-button {
@@ -577,10 +574,6 @@ h1 {
     padding-right: 6px;
   }
 
-  h1 {
-    font-size: 22px;
-  }
-
   .enemy {
     padding: 6px;
   }
@@ -615,11 +608,6 @@ h1 {
   .monster-attribute-icon {
     width: 1.25em;
     height: 1.25em;
-  }
-
-  .title-icon {
-    width: .95em;
-    height: .95em;
   }
 
   .button-icon {
