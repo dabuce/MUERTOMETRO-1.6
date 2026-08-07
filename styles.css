@@ -124,12 +124,11 @@ h1 {
 
 .icon-button {
   position: absolute;
-  right: 0;
-  height: var(--button-height);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, .12);
-  color: #fff;
-  font-size: 21px;
+  inset: 0;
+  background: transparent;
+  border: none;
+  color: transparent;
+  cursor: pointer;
 }
 
 .enemy-form {
