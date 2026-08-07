@@ -97,11 +97,6 @@ elements.list.addEventListener("click", event => {
 
     if (button.classList.contains("drag-handle")) return;
 
-    if (button.classList.contains("enemy-details-toggle")) {
-      toggleEnemyDetails(enemy.id);
-      return;
-    }
-
     if (button.classList.contains("enemy-ordinal-toggle")) {
       setEnemyElite(enemy, !enemy.elite);
       updateEnemy(enemy);
@@ -128,16 +123,30 @@ elements.list.addEventListener("click", event => {
       applyDamage(enemy.id, Number(button.dataset.damage));
       return;
     }
+
+    return;
+  }
+
+  if (enemyNode && !event.target.closest("input, select, textarea, label")) {
+    toggleEnemyDetails(enemyNode.dataset.id);
   }
 });
 
 elements.list.addEventListener("keydown", event => {
-  if (event.key !== "Enter") return;
   const input = event.target.closest(".damage-input");
-  if (!input) return;
-  const enemyNode = input.closest(".enemy");
-  const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
-  if (enemy) applyTypedDamage(enemy, enemyNode);
+  if (input) {
+    if (event.key !== "Enter") return;
+    const enemyNode = input.closest(".enemy");
+    const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
+    if (enemy) applyTypedDamage(enemy, enemyNode);
+    return;
+  }
+
+  const enemyNode = event.target.closest(".enemy");
+  if (!enemyNode || event.target.closest("button, input, select, textarea, label")) return;
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  toggleEnemyDetails(enemyNode.dataset.id);
 });
 
 elements.list.addEventListener("dragstart", event => {
@@ -511,7 +520,6 @@ function updateEnemy(enemy) {
 
   const eliteToggle = node.querySelector(".enemy-ordinal-toggle");
   const body = node.querySelector(".enemy-body");
-  const detailsToggle = node.querySelector(".enemy-details-toggle");
   const healthClass = getHealthClass(enemy.vida, enemy.max);
   const attributesNode = node.querySelector(".monster-attributes");
   const isExpanded = state.selectedEnemyId === enemy.id;
@@ -528,7 +536,7 @@ function updateEnemy(enemy) {
   node.querySelector(".health-value").className = `health-value ${healthClass}`;
   renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
-  syncEnemyBodyState(body, detailsToggle, isExpanded);
+  syncEnemyBodyState(body, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
@@ -537,18 +545,12 @@ function toggleEnemyDetails(enemyId) {
   for (const enemy of state.enemies) updateEnemy(enemy);
 }
 
-function syncEnemyBodyState(body, detailsToggle, isExpanded) {
+function syncEnemyBodyState(body, isExpanded) {
   if (!body) return;
 
   if (body._hideTimer) {
     window.clearTimeout(body._hideTimer);
     body._hideTimer = null;
-  }
-
-  if (detailsToggle) {
-    detailsToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
-    detailsToggle.setAttribute("aria-label", isExpanded ? "Ocultar controles del enemigo" : "Mostrar controles del enemigo");
-    detailsToggle.title = isExpanded ? "Ocultar controles del enemigo" : "Mostrar controles del enemigo";
   }
 
   if (isExpanded) {
