@@ -64,7 +64,6 @@ elements.form.addEventListener("submit", event => {
   });
 });
 
-elements.name.addEventListener("focus", renderMonsterSuggestions);
 elements.name.addEventListener("keydown", handleSearchKeydown);
 elements.suggestions.addEventListener("pointerdown", event => {
   const button = event.target.closest(".monster-suggestion");
