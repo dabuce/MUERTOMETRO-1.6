@@ -362,7 +362,6 @@ h1 {
 
 .drag-handle,
 .enemy-ordinal,
-.rank-toggle,
 .health-stat,
 .shield-stat {
   flex: 0 0 auto;
@@ -389,36 +388,28 @@ h1 {
   touch-action: none;
 }
 
-.rank-toggle {
+.enemy-ordinal {
+  display: grid;
+  place-items: center;
   width: 30px;
   height: 30px;
   padding: 0;
   border-radius: 50%;
   background: transparent;
-  color: #fff;
-  font-size: 17px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.rank-toggle.elite {
-  color: var(--elite);
-}
-
-.enemy-ordinal {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
   color: var(--text);
   font-size: 23px;
   font-weight: 800;
   line-height: 1;
+  cursor: pointer;
 }
 
-.enemy-ordinal,
-.rank-toggle {
-  flex: 0 0 auto;
+.enemy-ordinal.elite {
+  color: var(--elite);
+  text-shadow: 0 0 8px rgba(255, 202, 47, .28);
+}
+
+.enemy-ordinal-toggle {
+  touch-action: manipulation;
 }
 
 .stat {
@@ -513,12 +504,6 @@ h1 {
 
   .drag-handle {
     font-size: 25px;
-  }
-
-  .rank-toggle {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
   }
 
   .enemy-ordinal {

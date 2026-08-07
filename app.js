@@ -95,7 +95,7 @@ elements.list.addEventListener("click", event => {
   const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
   if (!enemy) return;
 
-  if (button.classList.contains("rank-toggle")) {
+  if (button.classList.contains("enemy-ordinal-toggle")) {
     setEnemyElite(enemy, !enemy.elite);
     updateEnemy(enemy);
     saveEnemies();
@@ -499,22 +499,21 @@ function updateEnemy(enemy) {
   const node = state.nodes.get(enemy.id);
   if (!node) return;
 
-  const eliteToggle = node.querySelector(".rank-toggle");
+  const eliteToggle = node.querySelector(".enemy-ordinal-toggle");
   const healthClass = getHealthClass(enemy.vida, enemy.max);
   const attributesNode = node.querySelector(".monster-attributes");
   node.classList.toggle("dead", enemy.vida <= 0);
   node.querySelector(".enemy-ordinal").textContent = getOrdinalLabel(enemy.ordinal);
-  node.querySelector(".health-value").textContent = String(Math.max(0, enemy.vida));
-  node.querySelector(".health-value").className = `health-value ${healthClass}`;
-  renderMonsterAttributes(attributesNode, enemy);
-  node.querySelector(".shield-value").textContent = String(enemy.escudo);
+  node.querySelector(".enemy-ordinal").classList.toggle("elite", enemy.elite);
   if (eliteToggle) {
-    eliteToggle.textContent = enemy.elite ? "🟡" : "⚪";
-    eliteToggle.classList.toggle("elite", enemy.elite);
     eliteToggle.setAttribute("aria-pressed", enemy.elite ? "true" : "false");
     eliteToggle.setAttribute("aria-label", enemy.elite ? "Marcar como normal" : "Marcar como élite");
     eliteToggle.title = enemy.elite ? "Marcar como normal" : "Marcar como élite";
   }
+  node.querySelector(".health-value").textContent = String(Math.max(0, enemy.vida));
+  node.querySelector(".health-value").className = `health-value ${healthClass}`;
+  renderMonsterAttributes(attributesNode, enemy);
+  node.querySelector(".shield-value").textContent = String(enemy.escudo);
 }
 
 function getHealthClass(current, max) {
