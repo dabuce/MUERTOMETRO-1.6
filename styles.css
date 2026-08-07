@@ -143,6 +143,8 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: var(--gap);
+  width: min(100%, 80%);
+  margin-inline: auto;
   margin-bottom: 16px;
 }
 
