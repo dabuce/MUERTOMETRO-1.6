@@ -357,6 +357,7 @@ h1 {
 }
 
 .enemy-top {
+  position: relative;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -365,16 +366,20 @@ h1 {
 }
 
 .monster-attributes {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  flex: 1 1 auto;
-  min-width: 0;
+  max-width: calc(100% - 160px);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .monster-attributes[hidden] {
@@ -600,6 +605,7 @@ h1 {
 
   .monster-attributes {
     gap: 3px;
+    max-width: calc(100% - 130px);
   }
 
   .monster-attribute {
