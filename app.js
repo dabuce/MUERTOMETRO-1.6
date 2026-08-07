@@ -414,7 +414,7 @@ function heal(enemyId, amount) {
 
 function deleteEnemy(enemyId) {
   const enemy = findEnemy(enemyId);
-  if (!enemy || !confirm(`¿Eliminar ${enemy.nombre}?`)) return;
+  if (!enemy) return;
 
   state.enemies = state.enemies.filter(item => item.id !== enemyId);
   renderList();
