@@ -138,9 +138,14 @@ h1 {
   margin-bottom: 7px;
 }
 
-.enemy-form input:first-child,
+.enemy-form input:first-child {
+  grid-column: 1 / -1;
+}
+
 .add-button {
   grid-column: 1 / -1;
+  width: 52%;
+  justify-self: center;
 }
 
 .monster-search {
