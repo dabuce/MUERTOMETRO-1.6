@@ -71,6 +71,10 @@ input {
   outline: none;
 }
 
+.enemy-form input[type="number"] {
+  text-align: center;
+}
+
 input::placeholder {
   color: #d6d6d6;
 }
@@ -101,10 +105,10 @@ select:focus {
 }
 
 .topbar {
-  display: grid;
-  grid-template-columns: 1fr var(--button-height);
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
   margin: 2px 0 7px;
 }
 
@@ -119,6 +123,8 @@ h1 {
 }
 
 .icon-button {
+  position: absolute;
+  right: 0;
   height: var(--button-height);
   border-radius: 8px;
   background: rgba(255, 255, 255, .12);
