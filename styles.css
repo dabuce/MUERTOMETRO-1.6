@@ -312,10 +312,18 @@ h1 {
   padding: 6px;
   border-radius: 7px;
   background: rgba(255, 255, 255, .03);
+  border: 1px solid transparent;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease, transform .18s ease;
 }
 
 .enemy.dead {
   opacity: .54;
+}
+
+.enemy.expanded {
+  background: rgba(255, 255, 255, .05);
+  border-color: rgba(220, 195, 125, .28);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .2);
 }
 
 .enemy.dragging {
@@ -444,6 +452,13 @@ h1 {
   gap: var(--gap);
 }
 
+.enemy-body {
+  display: grid;
+  gap: var(--gap);
+  overflow: hidden;
+  animation: enemy-body-enter .18s ease;
+}
+
 .enemy-actions .damage-input {
   grid-column: span 2;
 }
@@ -471,6 +486,18 @@ h1 {
 .quick-actions button {
   padding: 0 4px;
   font-size: 16px;
+}
+
+@keyframes enemy-body-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (min-width: 560px) {

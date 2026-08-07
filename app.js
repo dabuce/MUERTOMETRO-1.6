@@ -27,6 +27,7 @@ const state = {
   nodes: new Map(),
   pointerDragId: null,
   nativeDragId: null,
+  selectedEnemyId: null,
   deleteUndo: null
 };
 
@@ -81,43 +82,54 @@ elements.snackbarUndo.addEventListener("click", undoDeleteEnemy);
 
 elements.list.addEventListener("click", event => {
   const button = event.target.closest("button");
-  if (!button) return;
+  const enemyNode = event.target.closest(".enemy");
+  const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
 
-  if (button.classList.contains("enemy-group-toggle")) {
+  if (button && button.classList.contains("enemy-group-toggle")) {
     const groupNode = button.closest(".enemy-group");
     if (!groupNode) return;
     toggleEnemyGroupCollapse(groupNode.dataset.groupKey);
     return;
   }
 
-  const enemyNode = button.closest(".enemy");
-  const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
-  if (!enemy) return;
+  if (button && button.closest(".enemy")) {
+    if (!enemy) return;
 
-  if (button.classList.contains("enemy-ordinal-toggle")) {
-    setEnemyElite(enemy, !enemy.elite);
-    updateEnemy(enemy);
-    saveEnemies();
+    if (button.classList.contains("drag-handle")) return;
+
+    if (button.classList.contains("enemy-ordinal-toggle")) {
+      setEnemyElite(enemy, !enemy.elite);
+      updateEnemy(enemy);
+      saveEnemies();
+      return;
+    }
+
+    if (button.classList.contains("attack-button")) {
+      applyTypedDamage(enemy, enemyNode);
+      return;
+    }
+
+    if (button.classList.contains("heal-button")) {
+      heal(enemy.id, 1);
+      return;
+    }
+
+    if (button.classList.contains("delete-button")) {
+      deleteEnemy(enemy.id);
+      return;
+    }
+
+    if (button.dataset.damage) {
+      applyDamage(enemy.id, Number(button.dataset.damage));
+      return;
+    }
+
+    toggleEnemyDetails(enemy.id);
     return;
   }
 
-  if (button.classList.contains("attack-button")) {
-    applyTypedDamage(enemy, enemyNode);
-    return;
-  }
-
-  if (button.classList.contains("heal-button")) {
-    heal(enemy.id, 1);
-    return;
-  }
-
-  if (button.classList.contains("delete-button")) {
-    deleteEnemy(enemy.id);
-    return;
-  }
-
-  if (button.dataset.damage) {
-    applyDamage(enemy.id, Number(button.dataset.damage));
+  if (enemyNode && !event.target.closest("input, select, textarea, label")) {
+    toggleEnemyDetails(enemyNode.dataset.id);
   }
 });
 
@@ -421,6 +433,7 @@ function deleteEnemy(enemyId) {
   const enemy = index >= 0 ? state.enemies[index] : null;
   if (!enemy) return;
 
+  if (state.selectedEnemyId === enemyId) state.selectedEnemyId = null;
   hideDeleteUndoSnackbar();
   const snapshot = cloneEnemy(enemy);
   state.enemies.splice(index, 1);
@@ -499,9 +512,12 @@ function updateEnemy(enemy) {
   if (!node) return;
 
   const eliteToggle = node.querySelector(".enemy-ordinal-toggle");
+  const body = node.querySelector(".enemy-body");
   const healthClass = getHealthClass(enemy.vida, enemy.max);
   const attributesNode = node.querySelector(".monster-attributes");
+  const isExpanded = state.selectedEnemyId === enemy.id;
   node.classList.toggle("dead", enemy.vida <= 0);
+  node.classList.toggle("expanded", isExpanded);
   node.querySelector(".enemy-ordinal").textContent = getOrdinalLabel(enemy.ordinal);
   node.querySelector(".enemy-ordinal").classList.toggle("elite", enemy.elite);
   if (eliteToggle) {
@@ -513,6 +529,13 @@ function updateEnemy(enemy) {
   node.querySelector(".health-value").className = `health-value ${healthClass}`;
   renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
+  if (body) body.hidden = !isExpanded;
+  node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+}
+
+function toggleEnemyDetails(enemyId) {
+  state.selectedEnemyId = state.selectedEnemyId === enemyId ? null : enemyId;
+  for (const enemy of state.enemies) updateEnemy(enemy);
 }
 
 function getHealthClass(current, max) {
