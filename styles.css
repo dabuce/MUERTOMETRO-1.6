@@ -345,7 +345,7 @@ h1 {
   border-radius: 50%;
   background: transparent;
   color: #fff;
-  font-size: 21px;
+  font-size: 17px;
   line-height: 1;
   cursor: pointer;
 }
@@ -360,7 +360,7 @@ h1 {
   width: 28px;
   height: 28px;
   color: var(--text);
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 800;
   line-height: 1;
 }
@@ -467,13 +467,13 @@ h1 {
   .rank-toggle {
     width: 28px;
     height: 28px;
-    font-size: 19px;
+    font-size: 16px;
   }
 
   .enemy-ordinal {
     width: 26px;
     height: 26px;
-    font-size: 18px;
+    font-size: 21px;
   }
 
   .stat {
