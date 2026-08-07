@@ -357,26 +357,29 @@ h1 {
 }
 
 .enemy-top {
-  display: grid;
-  grid-template-columns: auto auto minmax(4.25em, max-content) minmax(0, 1fr) minmax(4.25em, max-content);
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
   min-height: 32px;
 }
 
 .monster-attributes {
-  grid-column: 4;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  width: 100%;
-  min-width: 0;
+  width: max-content;
+  max-width: calc(100% - 11em);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   pointer-events: none;
-  justify-self: center;
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
 
@@ -418,32 +421,19 @@ h1 {
 .health-stat,
 .shield-stat {
   flex: 0 0 auto;
-  min-width: 4.25em;
 }
 
 .health-stat,
 .shield-stat {
+  width: 4.25em;
+  min-width: 4.25em;
   white-space: nowrap;
 }
 
 .shield-stat {
-  grid-column: 5;
-  justify-self: end;
-  margin-left: 0;
+  margin-left: auto;
+  justify-content: flex-end;
   flex-shrink: 0;
-}
-
-.drag-handle {
-  grid-column: 1;
-}
-
-.enemy-ordinal {
-  grid-column: 2;
-}
-
-.health-stat {
-  grid-column: 3;
-  justify-self: start;
 }
 
 .drag-handle {
@@ -606,7 +596,6 @@ h1 {
 
   .enemy-top {
     gap: 4px;
-    grid-template-columns: auto auto minmax(3.8em, max-content) minmax(0, 1fr) minmax(3.8em, max-content);
   }
 
   .drag-handle {
@@ -625,6 +614,7 @@ h1 {
 
   .monster-attributes {
     gap: 3px;
+    max-width: calc(100% - 9.25em);
   }
 
   .monster-attribute {
