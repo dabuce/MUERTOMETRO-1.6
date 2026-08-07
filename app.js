@@ -57,12 +57,12 @@ elements.form.addEventListener("submit", event => {
   addEnemies();
 });
 
-["input", "change"].forEach(eventName => {
-  elements.name.addEventListener(eventName, () => {
-    renderMonsterSuggestions();
-    fillStatsFromSelection();
-  });
+elements.name.addEventListener("input", () => {
+  renderMonsterSuggestions();
+  fillStatsFromSelection();
 });
+
+elements.name.addEventListener("change", fillStatsFromSelection);
 
 elements.name.addEventListener("keydown", handleSearchKeydown);
 elements.suggestions.addEventListener("pointerdown", event => {
