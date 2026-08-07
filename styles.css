@@ -375,8 +375,21 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   min-width: 1.2em;
   font-size: 16px;
+  line-height: 1;
+}
+
+.monster-attribute-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.monster-attribute-value {
+  display: inline-block;
   line-height: 1;
 }
 
@@ -565,7 +578,13 @@ h1 {
   }
 
   .monster-attribute {
+    gap: 1px;
     font-size: 15px;
+  }
+
+  .monster-attribute-icon {
+    width: 1em;
+    height: 1em;
   }
 
   button,

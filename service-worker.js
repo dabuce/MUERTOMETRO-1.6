@@ -1,4 +1,4 @@
-const CACHE_NAME = "muertometro-v5";
+const CACHE_NAME = "muertometro-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,7 +7,17 @@ const APP_SHELL = [
   "./manifest.json",
   "./data/monsters.json",
   "./assets/icon-192.png",
-  "./assets/icon-512.png"
+  "./assets/icon-512.png",
+  "./assets/icons/curse.svg",
+  "./assets/icons/disarm.svg",
+  "./assets/icons/immobilize.svg",
+  "./assets/icons/muddle.svg",
+  "./assets/icons/pierce.svg",
+  "./assets/icons/poison.svg",
+  "./assets/icons/pull.svg",
+  "./assets/icons/push.svg",
+  "./assets/icons/stun.svg",
+  "./assets/icons/wound.svg"
 ];
 
 self.addEventListener("install", event => {
@@ -34,7 +44,8 @@ self.addEventListener("fetch", event => {
     url.pathname.endsWith("/styles.css") ||
     url.pathname.endsWith("/app.js") ||
     url.pathname.endsWith("/manifest.json") ||
-    url.pathname.endsWith("/data/monsters.json")
+    url.pathname.endsWith("/data/monsters.json") ||
+    url.pathname.startsWith("/assets/icons/")
   );
 
   if (isDocument || isAppAsset) {

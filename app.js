@@ -3,22 +3,24 @@
 const STORAGE_KEY = "gloomEnemies";
 const LIBRARY_URL = "data/monsters.json";
 const QUICK_DAMAGE = [1, 2, 3, 5, 10];
-const ATTRIBUTE_ICONS = new Map([
-  ["Flying", "🪽"],
-  ["Jump", "🦘"],
-  ["Poison", "☠️"],
-  ["Wound", "🩸"],
-  ["Stun", "💫"],
-  ["Disarm", "✋"],
-  ["Immobilize", "⛓️"],
-  ["Curse", "💀"],
-  ["Retaliate", "✊"],
-  ["Push", "➡️"],
-  ["Pull", "↩️"],
-  ["Pierce", "🗡️"],
-  ["Target", "🎯"],
-  ["Range", "🏹"]
-]);
+const STATUS_ICON_BASE = "assets/icons/";
+const STATUS_ICONS = Object.freeze({
+  Flying: { fallback: "🪽" }, // No SVG in the provided ZIP.
+  Jump: { fallback: "🦘" }, // No SVG in the provided ZIP.
+  Poison: { src: `${STATUS_ICON_BASE}poison.svg` },
+  Wound: { src: `${STATUS_ICON_BASE}wound.svg` },
+  Stun: { src: `${STATUS_ICON_BASE}stun.svg` },
+  Disarm: { src: `${STATUS_ICON_BASE}disarm.svg` },
+  Immobilize: { src: `${STATUS_ICON_BASE}immobilize.svg` },
+  Muddle: { src: `${STATUS_ICON_BASE}muddle.svg` },
+  Curse: { src: `${STATUS_ICON_BASE}curse.svg` },
+  Retaliate: { fallback: "✊" }, // No SVG in the provided ZIP.
+  Push: { src: `${STATUS_ICON_BASE}push.svg` },
+  Pull: { src: `${STATUS_ICON_BASE}pull.svg` },
+  Pierce: { src: `${STATUS_ICON_BASE}pierce.svg` },
+  Target: { fallback: "🎯" }, // No SVG in the provided ZIP.
+  Range: { fallback: "🏹" } // No SVG in the provided ZIP.
+});
 
 const state = {
   enemies: loadEnemies(),
@@ -658,12 +660,32 @@ function renderMonsterAttributes(target, enemy) {
 
   for (const attribute of attributes) {
     for (const parsed of parseMonsterAttributes(attribute)) {
-      const icon = ATTRIBUTE_ICONS.get(parsed.name);
+      const icon = STATUS_ICONS[parsed.name];
       if (!icon) continue;
 
       const span = document.createElement("span");
       span.className = "monster-attribute";
-      span.textContent = parsed.value ? `${icon}${parsed.value}` : icon;
+
+      if (icon.src) {
+        const image = document.createElement("img");
+        image.className = "monster-attribute-icon";
+        image.src = icon.src;
+        image.alt = "";
+        image.decoding = "async";
+        image.loading = "lazy";
+        image.setAttribute("aria-hidden", "true");
+        span.appendChild(image);
+
+        if (parsed.value) {
+          const value = document.createElement("span");
+          value.className = "monster-attribute-value";
+          value.textContent = parsed.value;
+          span.appendChild(value);
+        }
+      } else {
+        span.textContent = parsed.value ? `${icon.fallback}${parsed.value}` : icon.fallback;
+      }
+
       fragments.push(span);
     }
   }
