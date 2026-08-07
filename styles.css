@@ -367,7 +367,7 @@ h1 {
 
 .monster-attributes {
   position: absolute;
-  left: calc(50% + .5em);
+  left: calc(70% + .5em);
   top: 50%;
   display: flex;
   align-items: center;
