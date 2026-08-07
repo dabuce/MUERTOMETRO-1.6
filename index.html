@@ -18,7 +18,7 @@
 <body>
   <main class="app" aria-label="Muertometro">
     <header class="topbar">
-      <h1><span aria-hidden="true">&#x1f480;</span> MUERTOMETRO <span aria-hidden="true">&#x1f480;</span></h1>
+      <h1>MUERTOMETRO</h1>
       <button class="icon-button" id="fullscreenButton" type="button" aria-label="Pantalla completa" title="Pantalla completa"> </button>
     </header>
 
@@ -56,18 +56,18 @@
       <div class="enemy-top">
         <button class="drag-handle" type="button" aria-label="Reordenar enemigo" title="Reordenar">☰</button>
         <button class="enemy-ordinal enemy-ordinal-toggle" type="button" aria-pressed="false" aria-label="Marcar como élite" title="Marcar como élite">①</button>
-        <span class="stat health-stat"><span aria-hidden="true">❤</span> <span class="health-value"></span></span>
+        <span class="stat health-stat"><img class="stat-icon" src="assets/icons/heal.svg" alt="" aria-hidden="true"> <span class="health-value"></span></span>
         <div class="monster-attributes" aria-hidden="true"></div>
-        <span class="stat shield-stat"><span aria-hidden="true">🛡</span> <span class="shield-value"></span></span>
+        <span class="stat shield-stat"><img class="stat-icon" src="assets/icons/shield.svg" alt="" aria-hidden="true"> <span class="shield-value"></span></span>
       </div>
 
       <div class="enemy-body" hidden>
         <div class="enemy-body-inner">
           <div class="enemy-actions">
             <input class="damage-input" type="number" min="0" step="1" inputmode="numeric" placeholder="Daño" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Daño">
-            <button class="attack-button" type="button" aria-label="Aplicar daño">⚔️</button>
-            <button class="heal-button" type="button" aria-label="Curar 1">❤ +1</button>
-            <button class="delete-button" type="button" aria-label="Eliminar enemigo">🗑</button>
+            <button class="attack-button" type="button" aria-label="Aplicar daño"><img class="button-icon" src="assets/icons/attack.svg" alt="" aria-hidden="true"></button>
+            <button class="heal-button" type="button" aria-label="Curar 1"><img class="button-icon" src="assets/icons/heal.svg" alt="" aria-hidden="true"><span>+1</span></button>
+            <button class="delete-button" type="button" aria-label="Eliminar enemigo"><img class="button-icon" src="assets/icons/dead.svg" alt="" aria-hidden="true"></button>
           </div>
 
           <div class="quick-actions" aria-label="Daño rápido">

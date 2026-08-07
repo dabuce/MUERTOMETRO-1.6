@@ -1,4 +1,4 @@
-const CACHE_NAME = "muertometro-v6";
+const CACHE_NAME = "muertometro-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,15 +8,24 @@ const APP_SHELL = [
   "./data/monsters.json",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
+  "./assets/icons/attack.svg",
   "./assets/icons/curse.svg",
+  "./assets/icons/dead.svg",
   "./assets/icons/disarm.svg",
+  "./assets/icons/flying.svg",
+  "./assets/icons/heal.svg",
   "./assets/icons/immobilize.svg",
+  "./assets/icons/jump.svg",
   "./assets/icons/muddle.svg",
   "./assets/icons/pierce.svg",
   "./assets/icons/poison.svg",
   "./assets/icons/pull.svg",
   "./assets/icons/push.svg",
+  "./assets/icons/range.svg",
+  "./assets/icons/retaliate.svg",
+  "./assets/icons/shield.svg",
   "./assets/icons/stun.svg",
+  "./assets/icons/target.svg",
   "./assets/icons/wound.svg"
 ];
 

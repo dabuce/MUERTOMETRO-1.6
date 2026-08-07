@@ -114,12 +114,23 @@ select:focus {
 
 h1 {
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35em;
   color: var(--gold);
   font-size: 25px;
   line-height: 1;
   text-align: center;
   text-shadow: 1px 2px 3px #000;
   letter-spacing: 0;
+}
+
+.title-icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  display: block;
 }
 
 .icon-button {
@@ -393,6 +404,13 @@ h1 {
   line-height: 1;
 }
 
+.stat-icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  display: block;
+}
+
 .drag-handle,
 .enemy-ordinal,
 .health-stat,
@@ -454,8 +472,20 @@ h1 {
   white-space: nowrap;
 }
 
-.health-stat > span[aria-hidden="true"] {
-  color: #e8a7b8;
+.heal-button {
+  gap: 4px;
+}
+
+.button-icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.attack-button,
+.delete-button {
+  padding-inline: 6px;
 }
 
 .health-value.health-high {
@@ -585,6 +615,16 @@ h1 {
   .monster-attribute-icon {
     width: 1.25em;
     height: 1.25em;
+  }
+
+  .title-icon {
+    width: .95em;
+    height: .95em;
+  }
+
+  .button-icon {
+    width: 1.05em;
+    height: 1.05em;
   }
 
   button,
