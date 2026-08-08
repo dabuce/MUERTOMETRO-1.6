@@ -461,10 +461,19 @@ h1 {
 }
 
 .stat-icon {
-  width: 1em;
-  height: 1em;
+  width: 1.35em;
+  height: 1.35em;
   flex: 0 0 auto;
   display: block;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .drag-handle,
@@ -476,14 +485,19 @@ h1 {
 
 .health-stat,
 .shield-stat {
-  width: 4.25em;
-  min-width: 4.25em;
+  width: auto;
+  min-width: 0;
   white-space: nowrap;
+}
+
+.health-stat {
+  justify-content: flex-start;
 }
 
 .shield-stat {
   margin-left: auto;
   justify-content: flex-end;
+  flex-direction: row-reverse;
   flex-shrink: 0;
 }
 
@@ -537,6 +551,8 @@ h1 {
 
 .health-value,
 .shield-value {
+  font-size: 1em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -613,6 +629,16 @@ h1 {
     width: 26px;
     height: 26px;
     font-size: 21px;
+  }
+
+  .stat {
+    gap: 5px;
+    font-size: 18px;
+  }
+
+  .stat-icon {
+    width: 1.25em;
+    height: 1.25em;
   }
 
   .enemy-group-title {
