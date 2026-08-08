@@ -594,6 +594,7 @@ h1 {
   font-weight: 900;
   letter-spacing: .01em;
   line-height: 1;
+  gap: 4px;
   pointer-events: auto;
 }
 
@@ -604,6 +605,18 @@ h1 {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 1.2em 1.2em;
+}
+
+.damage-build-indicator-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.damage-build-indicator-value {
+  display: inline-block;
+  line-height: 1;
 }
 
 .damage-build-indicator[hidden] {

@@ -451,8 +451,8 @@ function updateDamageBuildIndicator(enemyId) {
     indicator.hidden = false;
     indicator.dataset.mode = "build";
     indicator.classList.remove("is-undo");
-    indicator.removeAttribute("aria-label");
-    indicator.textContent = `-${buildDamage}`;
+    indicator.setAttribute("aria-label", `Resolver golpe acumulado: ${buildDamage}`);
+    indicator.replaceChildren(createDamageIndicatorIcon("bane2.svg"), createDamageIndicatorValue(String(buildDamage)));
     return;
   }
 
@@ -461,15 +461,33 @@ function updateDamageBuildIndicator(enemyId) {
     indicator.dataset.mode = "undo";
     indicator.classList.add("is-undo");
     indicator.setAttribute("aria-label", "Deshacer daño");
-    indicator.textContent = "";
+    indicator.replaceChildren(createDamageIndicatorIcon("jump2.svg"));
     return;
   }
 
-  indicator.hidden = true;
+  indicator.hidden = false;
   indicator.dataset.mode = "";
   indicator.classList.remove("is-undo");
-  indicator.removeAttribute("aria-label");
-  indicator.textContent = "";
+  indicator.setAttribute("aria-label", "Resolver golpe acumulado");
+  indicator.replaceChildren(createDamageIndicatorIcon("bane2.svg"), createDamageIndicatorValue("0"));
+}
+
+function createDamageIndicatorIcon(filename) {
+  const icon = document.createElement("img");
+  icon.className = "damage-build-indicator-icon";
+  icon.src = `${STATUS_ICON_BASE}${filename}`;
+  icon.alt = "";
+  icon.decoding = "async";
+  icon.loading = "lazy";
+  icon.setAttribute("aria-hidden", "true");
+  return icon;
+}
+
+function createDamageIndicatorValue(value) {
+  const span = document.createElement("span");
+  span.className = "damage-build-indicator-value";
+  span.textContent = value;
+  return span;
 }
 
 function schedulePendingDamageTimer(enemyId, delay, callback) {
