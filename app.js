@@ -21,6 +21,11 @@ const STATUS_ICONS = Object.freeze({
   Target: `${STATUS_ICON_BASE}target.svg`,
   Range: `${STATUS_ICON_BASE}range.svg`
 });
+const GROUP_STAT_ICONS = Object.freeze({
+  Move: "⟶",
+  Attack: `${STATUS_ICON_BASE}attack.svg`,
+  Range: `${STATUS_ICON_BASE}range.svg`
+});
 
 const state = {
   enemies: loadEnemies(),
@@ -78,7 +83,10 @@ document.addEventListener("pointerdown", event => {
   if (!event.target.closest(".monster-search")) closeMonsterSuggestions();
 });
 
-elements.level.addEventListener("change", fillStatsFromSelection);
+elements.level.addEventListener("change", () => {
+  fillStatsFromSelection();
+  renderList();
+});
 elements.fullscreen.addEventListener("click", toggleFullscreen);
 elements.snackbarUndo.addEventListener("click", undoDeleteEnemy);
 
@@ -475,6 +483,7 @@ function renderList() {
     if (!group) {
       group = createEnemyGroupNode(getEnemyGroupTitle(enemy), groupKey, isGroupCollapsed(groupKey));
       group.count = 0;
+      group.sourceEnemy = enemy;
       groups.set(groupKey, group);
       groupOrder.push(group.node);
     }
@@ -492,9 +501,10 @@ function renderList() {
   });
 
   for (const group of groups.values()) {
-    group.header.querySelector(".enemy-group-indicator").textContent = group.collapsed ? "▶" : "▼";
+    group.header.querySelector(".enemy-group-indicator").textContent = group.collapsed ? "?" : "?";
     group.header.querySelector(".enemy-group-title-text").textContent = group.title;
-    group.header.querySelector(".enemy-group-count").textContent = `(${group.count})`;
+    renderMonsterHeaderStats(group.statsNode, group.sourceEnemy);
+    group.header.querySelector(".enemy-group-count").textContent = "(" + group.count + ")";
     group.rows.hidden = group.collapsed;
   }
 
@@ -531,12 +541,15 @@ function updateEnemy(enemy) {
   node.querySelector(".enemy-ordinal").classList.toggle("elite", enemy.elite);
   if (eliteToggle) {
     eliteToggle.setAttribute("aria-pressed", enemy.elite ? "true" : "false");
-    eliteToggle.setAttribute("aria-label", enemy.elite ? "Marcar como normal" : "Marcar como élite");
-    eliteToggle.title = enemy.elite ? "Marcar como normal" : "Marcar como élite";
+    eliteToggle.setAttribute("aria-label", enemy.elite ? "Marcar como normal" : "Marcar como ?lite");
+    eliteToggle.title = enemy.elite ? "Marcar como normal" : "Marcar como ?lite";
   }
   node.querySelector(".health-value").textContent = String(Math.max(0, enemy.vida));
-  node.querySelector(".health-value").className = `health-value ${healthClass}`;
-  renderMonsterAttributes(attributesNode, enemy);
+  node.querySelector(".health-value").className = "health-value " + healthClass;
+  if (attributesNode) {
+    attributesNode.hidden = true;
+    attributesNode.replaceChildren();
+  }
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
   syncEnemyBodyState(body, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
@@ -598,17 +611,78 @@ function createEnemyGroupNode(title, groupKey, collapsed) {
   header.innerHTML = `
     <span class="enemy-group-indicator" aria-hidden="true"></span>
     <span class="enemy-group-title-text"></span>
+    <span class="enemy-group-stats" aria-hidden="true"></span>
     <span class="enemy-group-count"></span>
   `;
   header.querySelector(".enemy-group-indicator").textContent = collapsed ? "▶" : "▼";
   header.querySelector(".enemy-group-title-text").textContent = title;
   header.querySelector(".enemy-group-count").textContent = "(0)";
+  const statsNode = header.querySelector(".enemy-group-stats");
 
   const rows = document.createElement("div");
   rows.className = "enemy-group-list";
 
   node.append(header, rows);
-  return { node, rows, header, title, collapsed };
+  return { node, rows, header, statsNode, title, collapsed, sourceEnemy: null };
+}
+
+function renderMonsterHeaderStats(target, enemy) {
+  if (!target) return;
+
+  const normalStats = getMonsterStatsForCurrentLevel(enemy, false);
+  const eliteStats = getMonsterStatsForCurrentLevel(enemy, true);
+  if (!normalStats && !eliteStats) {
+    target.replaceChildren();
+    target.hidden = true;
+    return;
+  }
+  const fragments = [];
+
+  fragments.push(buildMonsterStatChip("Move", GROUP_STAT_ICONS.Move, normalStats?.move, eliteStats?.move));
+  fragments.push(buildMonsterStatChip("Attack", GROUP_STAT_ICONS.Attack, normalStats?.attack, eliteStats?.attack));
+  fragments.push(buildMonsterStatChip("Range", GROUP_STAT_ICONS.Range, normalStats?.range, eliteStats?.range));
+
+  target.replaceChildren(...fragments);
+  target.hidden = fragments.length === 0;
+}
+
+function buildMonsterStatChip(label, icon, normalValue, eliteValue) {
+  const chip = document.createElement("span");
+  chip.className = "enemy-group-stat";
+
+  const iconNode = document.createElement(icon.endsWith(".svg") ? "img" : "span");
+  if (icon.endsWith(".svg")) {
+    iconNode.className = "enemy-group-stat-icon";
+    iconNode.src = icon;
+    iconNode.alt = "";
+    iconNode.decoding = "async";
+    iconNode.loading = "lazy";
+    iconNode.setAttribute("aria-hidden", "true");
+  } else {
+    iconNode.className = "enemy-group-stat-icon enemy-group-stat-icon--glyph";
+    iconNode.textContent = icon;
+    iconNode.setAttribute("aria-hidden", "true");
+  }
+
+  const values = document.createElement("span");
+  values.className = "enemy-group-stat-values";
+
+  const normal = document.createElement("span");
+  normal.className = "enemy-group-stat-value enemy-group-stat-value--normal";
+  normal.textContent = formatMonsterStatValue(normalValue);
+
+  const elite = document.createElement("span");
+  elite.className = "enemy-group-stat-value enemy-group-stat-value--elite";
+  elite.textContent = formatMonsterStatValue(eliteValue);
+
+  values.append(normal, elite);
+  chip.append(iconNode, values);
+  chip.title = label + " Normal " + formatMonsterStatValue(normalValue) + " / Elite " + formatMonsterStatValue(eliteValue);
+  return chip;
+}
+
+function formatMonsterStatValue(value) {
+  return value === null || value === undefined ? "–" : String(value);
 }
 
 function setEnemyElite(enemy, elite) {
@@ -637,6 +711,18 @@ function getMonsterStatsForEnemy(enemy, elite = enemy?.elite) {
   const level = String(enemy.level ?? "0");
   const rank = elite ? "elite" : "normal";
   return monster?.levels?.[level]?.[rank] || null;
+}
+
+function getMonsterStatsForCurrentLevel(enemy, elite = false) {
+  const monster = getMonsterForEnemy(enemy);
+  if (monster) {
+    const level = String(elements.level.value ?? "0");
+    const rank = elite ? "elite" : "normal";
+    const stats = monster?.levels?.[level]?.[rank];
+    if (stats) return stats;
+  }
+
+  return getStoredMonsterStats(enemy, elite);
 }
 
 function getStoredMonsterStats(enemy, elite) {

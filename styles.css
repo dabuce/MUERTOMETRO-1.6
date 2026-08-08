@@ -281,8 +281,7 @@ h1 {
 }
 
 .enemy-group-title {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -294,19 +293,76 @@ h1 {
   line-height: 1.1;
   letter-spacing: 0;
   text-shadow: none;
+  text-align: left;
+  overflow: hidden;
+}
+
+.enemy-group-title-text {
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: left;
-  justify-content: flex-start;
 }
 
 .enemy-group-title .enemy-group-indicator {
+  flex: 0 0 auto;
   width: 1ch;
   text-align: center;
 }
 
+.enemy-group-stats {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: .88em;
+}
+
+.enemy-group-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
+.enemy-group-stat-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.enemy-group-stat-icon--glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 1.1em;
+}
+
+.enemy-group-stat-values {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .18em;
+  flex: 0 0 auto;
+}
+
+.enemy-group-stat-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.enemy-group-stat-value--elite {
+  color: var(--elite);
+}
+
 .enemy-group-title .enemy-group-count {
+  flex: 0 0 auto;
   margin-left: 4px;
   color: var(--text);
   font-size: 16px;
@@ -610,6 +666,25 @@ h1 {
 
   .stat {
     font-size: 15px;
+  }
+
+  .enemy-group-title {
+    gap: 6px;
+    font-size: 16px;
+  }
+
+  .enemy-group-stats {
+    gap: 6px;
+    font-size: .8em;
+  }
+
+  .enemy-group-stat {
+    gap: 2px;
+  }
+
+  .enemy-group-stat-icon {
+    width: 1em;
+    height: 1em;
   }
 
   .monster-attributes {
