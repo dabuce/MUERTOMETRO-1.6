@@ -426,14 +426,14 @@ function ensureEnemyNodeStructure(node) {
     top.appendChild(right);
   }
 
-  const topLeft = node.querySelector(".enemy-top-left");
-  if (topLeft && !topLeft.querySelector(".damage-build-indicator")) {
+  const quickActions = node.querySelector(".quick-actions");
+  if (quickActions && !quickActions.querySelector(".damage-build-indicator")) {
     const indicator = document.createElement("button");
     indicator.type = "button";
     indicator.className = "damage-build-indicator";
     indicator.hidden = true;
     indicator.setAttribute("aria-label", "Resolver golpe acumulado");
-    topLeft.appendChild(indicator);
+    quickActions.insertBefore(indicator, quickActions.querySelector(".heal-button"));
   }
 }
 
@@ -706,7 +706,7 @@ function renderList() {
 function createEnemyNode(enemyId) {
   const node = elements.template.content.firstElementChild.cloneNode(true);
   node.dataset.id = enemyId;
-  node.querySelectorAll(".quick-actions button").forEach((button, index) => {
+  node.querySelectorAll(".quick-actions button[data-damage]").forEach((button, index) => {
     button.dataset.damage = QUICK_DAMAGE[index];
   });
   ensureEnemyNodeStructure(node);
