@@ -451,7 +451,8 @@ function updateDamageBuildIndicator(enemyId) {
     indicator.hidden = false;
     indicator.dataset.mode = "build";
     indicator.classList.remove("is-undo");
-    indicator.textContent = `\u{1F4A5} ${buildDamage}`;
+    indicator.removeAttribute("aria-label");
+    indicator.textContent = `-${buildDamage}`;
     return;
   }
 
@@ -459,13 +460,15 @@ function updateDamageBuildIndicator(enemyId) {
     indicator.hidden = false;
     indicator.dataset.mode = "undo";
     indicator.classList.add("is-undo");
-    indicator.textContent = "\u21B6 Deshacer";
+    indicator.setAttribute("aria-label", "Deshacer daño");
+    indicator.textContent = "";
     return;
   }
 
   indicator.hidden = true;
   indicator.dataset.mode = "";
   indicator.classList.remove("is-undo");
+  indicator.removeAttribute("aria-label");
   indicator.textContent = "";
 }
 
