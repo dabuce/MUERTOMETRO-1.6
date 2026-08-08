@@ -32,8 +32,6 @@ const state = {
   monsterLibrary: [],
   monsterByName: new Map(),
   nodes: new Map(),
-  pointerDragId: null,
-  nativeDragId: null,
   swipeDelete: null,
   selectedEnemyId: null,
   deleteUndo: null
@@ -116,8 +114,6 @@ elements.list.addEventListener("click", event => {
   if (button && button.closest(".enemy")) {
     if (!enemy) return;
 
-    if (button.classList.contains("drag-handle")) return;
-
     if (button.classList.contains("enemy-ordinal-toggle")) {
       setEnemyElite(enemy, !enemy.elite);
       updateEnemy(enemy);
@@ -151,46 +147,7 @@ elements.list.addEventListener("keydown", event => {
   toggleEnemyDetails(enemyNode.dataset.id);
 });
 
-elements.list.addEventListener("dragstart", event => {
-  const enemyNode = event.target.closest(".enemy");
-  if (!enemyNode) return;
-  state.nativeDragId = enemyNode.dataset.id;
-  enemyNode.classList.add("dragging");
-  event.dataTransfer.effectAllowed = "move";
-});
-
-elements.list.addEventListener("dragover", event => {
-  const enemyNode = event.target.closest(".enemy");
-  if (!enemyNode || !state.nativeDragId) return;
-  event.preventDefault();
-  markDragTarget(enemyNode);
-});
-
-elements.list.addEventListener("drop", event => {
-  const targetNode = event.target.closest(".enemy");
-  if (!targetNode || !state.nativeDragId) return;
-  event.preventDefault();
-  reorderEnemy(state.nativeDragId, targetNode.dataset.id);
-  clearDragState();
-});
-
-elements.list.addEventListener("dragend", clearDragState);
-
 elements.list.addEventListener("pointerdown", event => {
-  const handle = event.target.closest(".drag-handle");
-  if (!handle) return;
-
-  const enemyNode = handle.closest(".enemy");
-  if (!enemyNode) return;
-
-  state.pointerDragId = enemyNode.dataset.id;
-  enemyNode.classList.add("dragging");
-  handle.setPointerCapture(event.pointerId);
-  if (navigator.vibrate) navigator.vibrate(18);
-});
-
-elements.list.addEventListener("pointerdown", event => {
-  if (state.pointerDragId) return;
   if (event.button !== 0) return;
   if (event.target.closest("button, input, select, textarea, label")) return;
 
@@ -217,15 +174,8 @@ elements.list.addEventListener("pointerdown", event => {
 });
 
 elements.list.addEventListener("pointermove", event => {
-  if (!state.pointerDragId) return;
-  const targetNode = document.elementFromPoint(event.clientX, event.clientY)?.closest(".enemy");
-  if (!targetNode || targetNode.dataset.id === state.pointerDragId) return;
-  markDragTarget(targetNode);
-});
-
-elements.list.addEventListener("pointermove", event => {
   const swipe = state.swipeDelete;
-  if (!swipe || swipe.pointerId !== event.pointerId || state.pointerDragId) return;
+  if (!swipe || swipe.pointerId !== event.pointerId) return;
 
   const dx = event.clientX - swipe.startX;
   const dy = event.clientY - swipe.startY;
@@ -277,11 +227,6 @@ elements.list.addEventListener("pointerup", event => {
       state.swipeDelete = null;
     }
   }
-
-  if (!state.pointerDragId) return;
-  const targetNode = document.elementFromPoint(event.clientX, event.clientY)?.closest(".enemy");
-  if (targetNode) reorderEnemy(state.pointerDragId, targetNode.dataset.id);
-  clearDragState();
 });
 
 elements.list.addEventListener("pointercancel", event => {
@@ -300,8 +245,6 @@ elements.list.addEventListener("pointercancel", event => {
     }
     state.swipeDelete = null;
   }
-
-  clearDragState();
 });
 
 if ("serviceWorker" in navigator) {
@@ -552,19 +495,6 @@ function deleteEnemy(enemyId) {
   renderList();
   saveEnemies();
   showDeleteUndoSnackbar(snapshot, index);
-}
-
-function reorderEnemy(sourceId, targetId) {
-  if (!sourceId || !targetId || sourceId === targetId) return;
-
-  const from = state.enemies.findIndex(enemy => enemy.id === sourceId);
-  const to = state.enemies.findIndex(enemy => enemy.id === targetId);
-  if (from < 0 || to < 0) return;
-
-  const [enemy] = state.enemies.splice(from, 1);
-  state.enemies.splice(to, 0, enemy);
-  renderList();
-  saveEnemies();
 }
 
 function renderList() {
@@ -964,19 +894,6 @@ function toInt(value, fallback) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
-}
-
-function markDragTarget(node) {
-  document.querySelectorAll(".drag-over").forEach(item => item.classList.remove("drag-over"));
-  node.classList.add("drag-over");
-}
-
-function clearDragState() {
-  state.pointerDragId = null;
-  state.nativeDragId = null;
-  document.querySelectorAll(".dragging, .drag-over").forEach(item => {
-    item.classList.remove("dragging", "drag-over");
-  });
 }
 
 function showDeleteUndoSnackbar(enemySnapshot, index) {

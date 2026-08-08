@@ -398,39 +398,27 @@ h1 {
   box-shadow: 0 8px 18px rgba(0, 0, 0, .2);
 }
 
-.enemy.dragging {
-  opacity: .4;
-}
-
-.enemy.drag-over {
-  background: var(--panel-drag);
-  outline: 2px solid rgba(220, 195, 125, .55);
-}
-
 .enemy-top {
-  position: relative;
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto max-content;
   align-items: center;
   gap: 6px;
   min-height: 32px;
 }
 
 .monster-attributes {
-  position: absolute;
-  left: calc(59% + .5em);
-  top: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
+  grid-column: 3;
+  justify-self: center;
   width: max-content;
-  max-width: calc(100% - 11em);
+  max-width: 100%;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   pointer-events: none;
-  transform: translate(-50%, -50%);
   z-index: 1;
 }
 
@@ -476,7 +464,6 @@ h1 {
   white-space: nowrap;
 }
 
-.drag-handle,
 .enemy-ordinal,
 .health-stat,
 .shield-stat {
@@ -490,26 +477,18 @@ h1 {
   white-space: nowrap;
 }
 
+.enemy-ordinal {
+  justify-self: start;
+}
+
 .health-stat {
-  justify-content: flex-start;
+  justify-self: start;
 }
 
 .shield-stat {
-  margin-left: auto;
-  justify-content: flex-end;
+  justify-self: end;
   flex-direction: row-reverse;
   flex-shrink: 0;
-}
-
-.drag-handle {
-  width: var(--button-height);
-  height: var(--button-height);
-  padding: 0;
-  background: transparent;
-  color: #fff;
-  font-size: 27px;
-  cursor: grab;
-  touch-action: none;
 }
 
 .enemy-ordinal {
@@ -619,10 +598,6 @@ h1 {
 
   .enemy-top {
     gap: 4px;
-  }
-
-  .drag-handle {
-    font-size: 25px;
   }
 
   .enemy-ordinal {
