@@ -400,10 +400,20 @@ h1 {
 
 .enemy-top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto max-content;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 6px;
   min-height: 32px;
+}
+
+.enemy-top > .enemy-ordinal {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.enemy-top > .health-stat {
+  grid-column: 2;
+  justify-self: start;
 }
 
 .monster-attributes {
@@ -412,9 +422,9 @@ h1 {
   justify-content: center;
   gap: 4px;
   grid-column: 3;
-  justify-self: center;
-  width: max-content;
-  max-width: 100%;
+  justify-self: stretch;
+  width: 100%;
+  min-width: 0;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -477,15 +487,8 @@ h1 {
   white-space: nowrap;
 }
 
-.enemy-ordinal {
-  justify-self: start;
-}
-
-.health-stat {
-  justify-self: start;
-}
-
 .shield-stat {
+  grid-column: 4;
   justify-self: end;
   flex-direction: row-reverse;
   flex-shrink: 0;
