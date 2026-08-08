@@ -546,10 +546,7 @@ function updateEnemy(enemy) {
   }
   node.querySelector(".health-value").textContent = String(Math.max(0, enemy.vida));
   node.querySelector(".health-value").className = "health-value " + healthClass;
-  if (attributesNode) {
-    attributesNode.hidden = true;
-    attributesNode.replaceChildren();
-  }
+  renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
   syncEnemyBodyState(body, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
