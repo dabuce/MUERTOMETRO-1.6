@@ -380,6 +380,7 @@ h1 {
   border: 1px solid transparent;
   transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease, transform .18s ease;
   cursor: pointer;
+  touch-action: pan-y;
 }
 
 .enemy button,
@@ -521,31 +522,6 @@ h1 {
   touch-action: manipulation;
 }
 
-.stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 22px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.heal-button {
-  gap: 4px;
-}
-
-.button-icon {
-  width: 1.1em;
-  height: 1.1em;
-  flex: 0 0 auto;
-  display: block;
-}
-
-.attack-button,
-.delete-button {
-  padding-inline: 6px;
-}
-
 .health-value.health-high {
   color: var(--green);
 }
@@ -562,12 +538,6 @@ h1 {
 .health-value,
 .shield-value {
   font-variant-numeric: tabular-nums;
-}
-
-.enemy-actions {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--gap);
 }
 
 .enemy-body {
@@ -594,33 +564,20 @@ h1 {
   gap: var(--gap);
 }
 
-.enemy-actions .damage-input {
-  grid-column: span 2;
-}
-
-.damage-input {
-  background: #fff;
-  border-color: #fff;
-  color: #222;
-}
-
-.damage-input::placeholder {
-  color: #777;
-}
-
-.delete-button {
-  color: var(--danger);
-}
-
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: var(--gap);
 }
 
 .quick-actions button {
   padding: 0 4px;
   font-size: 16px;
+}
+
+.enemy.swipe-delete-active {
+  z-index: 2;
+  transition: none;
 }
 
 @media (min-width: 560px) {
@@ -658,10 +615,6 @@ h1 {
     font-size: 21px;
   }
 
-  .stat {
-    font-size: 15px;
-  }
-
   .enemy-group-title {
     gap: 6px;
     font-size: 16px;
@@ -679,26 +632,6 @@ h1 {
   .enemy-group-stat-icon {
     width: 1em;
     height: 1em;
-  }
-
-  .monster-attributes {
-    gap: 3px;
-    max-width: calc(100% - 9.25em);
-  }
-
-  .monster-attribute {
-    gap: 1px;
-    font-size: 15px;
-  }
-
-  .monster-attribute-icon {
-    width: 1.25em;
-    height: 1.25em;
-  }
-
-  .button-icon {
-    width: 1.05em;
-    height: 1.05em;
   }
 
   button,

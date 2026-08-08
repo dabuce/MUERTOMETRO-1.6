@@ -34,6 +34,7 @@ const state = {
   nodes: new Map(),
   pointerDragId: null,
   nativeDragId: null,
+  swipeDelete: null,
   selectedEnemyId: null,
   deleteUndo: null
 };
@@ -102,6 +103,11 @@ elements.list.addEventListener("click", event => {
     return;
   }
 
+  if (enemyNode && enemy && state.swipeDelete?.suppressClickId === enemy.id) {
+    state.swipeDelete.suppressClickId = null;
+    return;
+  }
+
   if (button && button.closest(".enemy")) {
     if (!enemy) return;
 
@@ -114,18 +120,8 @@ elements.list.addEventListener("click", event => {
       return;
     }
 
-    if (button.classList.contains("attack-button")) {
-      applyTypedDamage(enemy, enemyNode);
-      return;
-    }
-
     if (button.classList.contains("heal-button")) {
       heal(enemy.id, 1);
-      return;
-    }
-
-    if (button.classList.contains("delete-button")) {
-      deleteEnemy(enemy.id);
       return;
     }
 
@@ -143,15 +139,6 @@ elements.list.addEventListener("click", event => {
 });
 
 elements.list.addEventListener("keydown", event => {
-  const input = event.target.closest(".damage-input");
-  if (input) {
-    if (event.key !== "Enter") return;
-    const enemyNode = input.closest(".enemy");
-    const enemy = enemyNode ? findEnemy(enemyNode.dataset.id) : null;
-    if (enemy) applyTypedDamage(enemy, enemyNode);
-    return;
-  }
-
   const enemyNode = event.target.closest(".enemy");
   if (!enemyNode || event.target.closest("button, input, select, textarea, label")) return;
   if (event.key !== "Enter" && event.key !== " ") return;
@@ -197,6 +184,33 @@ elements.list.addEventListener("pointerdown", event => {
   if (navigator.vibrate) navigator.vibrate(18);
 });
 
+elements.list.addEventListener("pointerdown", event => {
+  if (state.pointerDragId) return;
+  if (event.button !== 0) return;
+  if (event.target.closest("button, input, select, textarea, label")) return;
+
+  const enemyNode = event.target.closest(".enemy");
+  if (!enemyNode) return;
+
+  state.swipeDelete = {
+    enemyId: enemyNode.dataset.id,
+    node: enemyNode,
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    active: false,
+    suppressClickId: null
+  };
+
+  if (enemyNode.setPointerCapture) {
+    try {
+      enemyNode.setPointerCapture(event.pointerId);
+    } catch {
+      // Ignore capture failures on browsers that reject it for some targets.
+    }
+  }
+});
+
 elements.list.addEventListener("pointermove", event => {
   if (!state.pointerDragId) return;
   const targetNode = document.elementFromPoint(event.clientX, event.clientY)?.closest(".enemy");
@@ -204,14 +218,86 @@ elements.list.addEventListener("pointermove", event => {
   markDragTarget(targetNode);
 });
 
+elements.list.addEventListener("pointermove", event => {
+  const swipe = state.swipeDelete;
+  if (!swipe || swipe.pointerId !== event.pointerId || state.pointerDragId) return;
+
+  const dx = event.clientX - swipe.startX;
+  const dy = event.clientY - swipe.startY;
+  const node = swipe.node;
+  const width = Math.max(1, node.getBoundingClientRect().width);
+  const threshold = Math.max(88, width * 0.28);
+
+  if (!swipe.active) {
+    if (dx <= 10 || Math.abs(dx) <= Math.abs(dy)) return;
+    swipe.active = true;
+    node.classList.add("swipe-delete-active");
+  }
+
+  const translateX = Math.min(Math.max(0, dx), width * 0.45);
+  node.style.transform = `translate3d(${translateX}px, 0, 0)`;
+  node.dataset.swipeThreshold = String(threshold);
+});
+
 elements.list.addEventListener("pointerup", event => {
+  const swipe = state.swipeDelete;
+  if (swipe && swipe.pointerId === event.pointerId) {
+    const node = swipe.node;
+    const dx = event.clientX - swipe.startX;
+    const threshold = Number(node.dataset.swipeThreshold || Math.max(88, node.getBoundingClientRect().width * 0.28));
+    const shouldDelete = swipe.active && dx >= threshold;
+
+    node.classList.remove("swipe-delete-active");
+    node.style.transform = "";
+    delete node.dataset.swipeThreshold;
+
+    if (shouldDelete) {
+      swipe.suppressClickId = swipe.enemyId;
+      state.swipeDelete = swipe;
+      deleteEnemy(swipe.enemyId);
+    } else if (swipe.active) {
+      swipe.suppressClickId = swipe.enemyId;
+      state.swipeDelete = swipe;
+    }
+
+    if (node.releasePointerCapture) {
+      try {
+        node.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release failures for detached nodes.
+      }
+    }
+
+    if (!shouldDelete && !swipe.active) {
+      state.swipeDelete = null;
+    }
+  }
+
   if (!state.pointerDragId) return;
   const targetNode = document.elementFromPoint(event.clientX, event.clientY)?.closest(".enemy");
   if (targetNode) reorderEnemy(state.pointerDragId, targetNode.dataset.id);
   clearDragState();
 });
 
-elements.list.addEventListener("pointercancel", clearDragState);
+elements.list.addEventListener("pointercancel", event => {
+  const swipe = state.swipeDelete;
+  if (swipe && swipe.pointerId === event.pointerId) {
+    const node = swipe.node;
+    node.classList.remove("swipe-delete-active");
+    node.style.transform = "";
+    delete node.dataset.swipeThreshold;
+    if (node.releasePointerCapture) {
+      try {
+        node.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release failures for detached nodes.
+      }
+    }
+    state.swipeDelete = null;
+  }
+
+  clearDragState();
+});
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -416,14 +502,6 @@ function getNextEnemyNumbers(baseName, quantity) {
 function hasNumberedEnemy(baseName) {
   const numberedName = new RegExp(`^${escapeRegExp(baseName)}\\s+\\d+$`, "i");
   return state.enemies.some(enemy => numberedName.test(String(enemy.nombre)));
-}
-
-function applyTypedDamage(enemy, enemyNode) {
-  const input = enemyNode.querySelector(".damage-input");
-  const damage = toInt(input.value, NaN);
-  if (!Number.isFinite(damage)) return;
-  applyDamage(enemy.id, damage);
-  input.value = "";
 }
 
 function applyDamage(enemyId, rawDamage) {
