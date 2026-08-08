@@ -33,6 +33,8 @@ const state = {
   monsterByName: new Map(),
   nodes: new Map(),
   pendingDamage: new Map(),
+  pendingDamageUndo: new Map(),
+  pendingDamageTimers: new Map(),
   swipeDelete: null,
   selectedEnemyId: null,
   deleteUndo: null
@@ -133,7 +135,7 @@ elements.list.addEventListener("click", event => {
     }
 
     if (button.classList.contains("damage-build-indicator")) {
-      resolvePendingDamage(enemy.id);
+      handleDamageActionButton(enemy.id);
       return;
     }
 
@@ -424,40 +426,72 @@ function ensureEnemyNodeStructure(node) {
     top.appendChild(right);
   }
 
-  const bodyInner = node.querySelector(".enemy-body-inner");
-  if (bodyInner && !bodyInner.querySelector(".damage-build-row")) {
-    const row = document.createElement("div");
-    row.className = "damage-build-row";
-    row.hidden = true;
-
+  const topLeft = node.querySelector(".enemy-top-left");
+  if (topLeft && !topLeft.querySelector(".damage-build-indicator")) {
     const indicator = document.createElement("button");
     indicator.type = "button";
     indicator.className = "damage-build-indicator";
     indicator.hidden = true;
     indicator.setAttribute("aria-label", "Resolver golpe acumulado");
-
-    row.appendChild(indicator);
-    bodyInner.insertBefore(row, bodyInner.firstChild);
+    topLeft.appendChild(indicator);
   }
 }
 
-function updateDamageBuildIndicator(enemyId, damage) {
+function updateDamageBuildIndicator(enemyId) {
   const node = state.nodes.get(enemyId);
   if (!node) return;
 
   const indicator = node.querySelector(".damage-build-indicator");
-  const row = node.querySelector(".damage-build-row");
   if (!indicator) return;
 
-  const current = Math.max(0, toInt(damage, 0));
-  if (row) row.hidden = current <= 0;
-  indicator.hidden = current <= 0;
-  indicator.textContent = current > 0 ? `💥 ${current}` : "";
+  const buildDamage = Math.max(0, toInt(state.pendingDamage.get(enemyId) || 0, 0));
+  const undoState = state.pendingDamageUndo.get(enemyId) || null;
+
+  if (buildDamage > 0) {
+    indicator.hidden = false;
+    indicator.dataset.mode = "build";
+    indicator.classList.remove("is-undo");
+    indicator.textContent = `\u{1F4A5} ${buildDamage}`;
+    return;
+  }
+
+  if (undoState) {
+    indicator.hidden = false;
+    indicator.dataset.mode = "undo";
+    indicator.classList.add("is-undo");
+    indicator.textContent = "\u21B6 Deshacer";
+    return;
+  }
+
+  indicator.hidden = true;
+  indicator.dataset.mode = "";
+  indicator.classList.remove("is-undo");
+  indicator.textContent = "";
+}
+
+function schedulePendingDamageTimer(enemyId, delay, callback) {
+  clearPendingDamageTimer(enemyId);
+  const timer = window.setTimeout(() => {
+    if (state.pendingDamageTimers.get(enemyId) !== timer) return;
+    state.pendingDamageTimers.delete(enemyId);
+    callback();
+  }, delay);
+  state.pendingDamageTimers.set(enemyId, timer);
+}
+
+function clearPendingDamageTimer(enemyId) {
+  const timer = state.pendingDamageTimers.get(enemyId);
+  if (timer) {
+    clearTimeout(timer);
+    state.pendingDamageTimers.delete(enemyId);
+  }
 }
 
 function clearPendingDamage(enemyId) {
+  clearPendingDamageTimer(enemyId);
   state.pendingDamage.delete(enemyId);
-  updateDamageBuildIndicator(enemyId, 0);
+  state.pendingDamageUndo.delete(enemyId);
+  updateDamageBuildIndicator(enemyId);
 }
 
 function addEnemies() {
@@ -534,7 +568,13 @@ function addPendingDamage(enemyId, rawDamage) {
 
   const nextDamage = Math.max(0, (state.pendingDamage.get(enemyId) || 0) + Math.max(0, rawDamage));
   state.pendingDamage.set(enemyId, nextDamage);
-  updateDamageBuildIndicator(enemyId, nextDamage);
+  if (state.pendingDamageUndo.has(enemyId)) {
+    clearPendingDamageTimer(enemyId);
+    state.pendingDamageUndo.delete(enemyId);
+  }
+
+  updateDamageBuildIndicator(enemyId);
+  schedulePendingDamageTimer(enemyId, 2000, () => discardPendingDamage(enemyId));
 }
 
 function resolvePendingDamage(enemyId) {
@@ -544,10 +584,51 @@ function resolvePendingDamage(enemyId) {
   const rawDamage = state.pendingDamage.get(enemyId) || 0;
   if (rawDamage <= 0) return;
 
+  clearPendingDamageTimer(enemyId);
+  const previousHealth = enemy.vida;
   const effectiveDamage = Math.max(0, rawDamage - enemy.escudo);
   enemy.vida = Math.max(0, enemy.vida - effectiveDamage);
   state.pendingDamage.delete(enemyId);
-  updateDamageBuildIndicator(enemyId, 0);
+  state.pendingDamageUndo.set(enemyId, { previousHealth, damage: rawDamage });
+  updateDamageBuildIndicator(enemyId);
+  commitEnemyChange(enemy);
+  schedulePendingDamageTimer(enemyId, 2000, () => discardResolvedDamage(enemyId));
+}
+
+function discardPendingDamage(enemyId) {
+  if (!state.pendingDamage.has(enemyId)) return;
+  clearPendingDamageTimer(enemyId);
+  state.pendingDamage.delete(enemyId);
+  updateDamageBuildIndicator(enemyId);
+}
+
+function discardResolvedDamage(enemyId) {
+  if (!state.pendingDamageUndo.has(enemyId)) return;
+  clearPendingDamageTimer(enemyId);
+  state.pendingDamageUndo.delete(enemyId);
+  updateDamageBuildIndicator(enemyId);
+}
+
+function handleDamageActionButton(enemyId) {
+  if (state.pendingDamageUndo.has(enemyId)) {
+    undoResolvedDamage(enemyId);
+    return;
+  }
+
+  if (state.pendingDamage.has(enemyId)) {
+    resolvePendingDamage(enemyId);
+  }
+}
+
+function undoResolvedDamage(enemyId) {
+  const enemy = findEnemy(enemyId);
+  const pending = state.pendingDamageUndo.get(enemyId);
+  if (!enemy || !pending) return;
+
+  clearPendingDamageTimer(enemyId);
+  enemy.vida = clamp(toInt(pending.previousHealth, enemy.vida), 0, enemy.max);
+  state.pendingDamageUndo.delete(enemyId);
+  updateDamageBuildIndicator(enemyId);
   commitEnemyChange(enemy);
 }
 
@@ -615,7 +696,7 @@ function renderList() {
     if (seenIds.has(id)) continue;
     node.remove();
     state.nodes.delete(id);
-    state.pendingDamage.delete(id);
+    clearPendingDamage(id);
   }
 }
 
@@ -651,7 +732,7 @@ function updateEnemy(enemy) {
   node.querySelector(".health-value").className = "health-value " + healthClass;
   renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
-  updateDamageBuildIndicator(enemy.id, state.pendingDamage.get(enemy.id) || 0);
+  updateDamageBuildIndicator(enemy.id);
   syncEnemyBodyState(body, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
@@ -1044,3 +1125,6 @@ function clearDeleteUndoSnackbar() {
   elements.snackbarUndo.dataset.id = "";
   elements.snackbarMessage.textContent = "";
 }
+
+
+

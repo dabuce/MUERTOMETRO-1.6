@@ -411,6 +411,8 @@ h1 {
   align-items: center;
   gap: 6px;
   min-width: 0;
+  position: relative;
+  overflow: visible;
 }
 
 .enemy-top-right {
@@ -558,6 +560,7 @@ h1 {
 }
 
 .enemy-body-inner {
+  position: relative;
   min-height: 0;
   overflow: hidden;
   display: grid;
@@ -575,16 +578,14 @@ h1 {
   font-size: 16px;
 }
 
-.damage-build-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .damage-build-indicator {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
   width: auto;
-  min-width: 86px;
-  padding: 0 14px;
+  min-width: 92px;
+  padding: 0 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 142, 180, .55);
   background: rgba(255, 255, 255, .06);
@@ -592,6 +593,18 @@ h1 {
   font-size: 18px;
   font-weight: 900;
   letter-spacing: .01em;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.damage-build-indicator.is-undo {
+  border-color: rgba(186, 214, 255, .55);
+  color: #dce9ff;
+  background: rgba(255, 255, 255, .08);
+}
+
+.damage-build-indicator[hidden] {
+  display: none;
 }
 
 .enemy.swipe-delete-active {
