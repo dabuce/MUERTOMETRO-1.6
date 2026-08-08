@@ -441,6 +441,20 @@ function saveEnemies() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.enemies));
 }
 
+function getEnemyIndex(enemyId) {
+  return state.enemies.findIndex(enemy => enemy.id === enemyId);
+}
+
+function clearSelectedEnemyIfNeeded(enemyId) {
+  if (state.selectedEnemyId === enemyId) state.selectedEnemyId = null;
+}
+
+function commitEnemyChange(enemy) {
+  if (!enemy) return;
+  updateEnemy(enemy);
+  saveEnemies();
+}
+
 function addEnemies() {
   const baseName = elements.name.value.trim();
   const health = toInt(elements.health.value, NaN);
@@ -515,8 +529,7 @@ function applyDamage(enemyId, rawDamage) {
 
   const effectiveDamage = Math.max(0, rawDamage - enemy.escudo);
   enemy.vida = Math.max(0, enemy.vida - effectiveDamage);
-  updateEnemy(enemy);
-  saveEnemies();
+  commitEnemyChange(enemy);
 }
 
 function heal(enemyId, amount) {
@@ -524,16 +537,15 @@ function heal(enemyId, amount) {
   if (!enemy) return;
 
   enemy.vida = Math.min(enemy.max, enemy.vida + amount);
-  updateEnemy(enemy);
-  saveEnemies();
+  commitEnemyChange(enemy);
 }
 
 function deleteEnemy(enemyId) {
-  const index = state.enemies.findIndex(enemy => enemy.id === enemyId);
+  const index = getEnemyIndex(enemyId);
   const enemy = index >= 0 ? state.enemies[index] : null;
   if (!enemy) return;
 
-  if (state.selectedEnemyId === enemyId) state.selectedEnemyId = null;
+  clearSelectedEnemyIfNeeded(enemyId);
   hideDeleteUndoSnackbar();
   const snapshot = cloneEnemy(enemy);
   state.enemies.splice(index, 1);
@@ -970,20 +982,15 @@ function clearDragState() {
 function showDeleteUndoSnackbar(enemySnapshot, index) {
   if (!enemySnapshot) return;
 
-  elements.snackbarMessage.textContent = `${enemySnapshot.nombre} eliminado`;
-  elements.snackbarUndo.dataset.id = enemySnapshot.id;
-  elements.snackbar.classList.add("visible");
-
-  const timer = window.setTimeout(() => {
-    if (state.deleteUndo?.enemy?.id !== enemySnapshot.id) return;
-    hideDeleteUndoSnackbar();
-  }, 3000);
-
   state.deleteUndo = {
     enemy: enemySnapshot,
     index,
-    timer
+    timer: window.setTimeout(() => {
+      if (state.deleteUndo?.enemy?.id !== enemySnapshot.id) return;
+      hideDeleteUndoSnackbar();
+    }, 3000)
   };
+  renderDeleteUndoSnackbar(enemySnapshot);
 }
 
 function undoDeleteEnemy() {
@@ -999,13 +1006,9 @@ function undoDeleteEnemy() {
 }
 
 function hideDeleteUndoSnackbar() {
-  if (state.deleteUndo?.timer) {
-    clearTimeout(state.deleteUndo.timer);
-  }
+  clearDeleteUndoTimer();
   state.deleteUndo = null;
-  elements.snackbar.classList.remove("visible");
-  elements.snackbarUndo.dataset.id = "";
-  elements.snackbarMessage.textContent = "";
+  clearDeleteUndoSnackbar();
 }
 
 function cloneEnemy(enemy) {
@@ -1025,4 +1028,22 @@ async function toggleFullscreen() {
   } catch {
     console.warn("No se pudo activar la pantalla completa.");
   }
+}
+
+function renderDeleteUndoSnackbar(enemySnapshot) {
+  elements.snackbarMessage.textContent = `${enemySnapshot.nombre} eliminado`;
+  elements.snackbarUndo.dataset.id = enemySnapshot.id;
+  elements.snackbar.classList.add("visible");
+}
+
+function clearDeleteUndoTimer() {
+  if (state.deleteUndo?.timer) {
+    clearTimeout(state.deleteUndo.timer);
+  }
+}
+
+function clearDeleteUndoSnackbar() {
+  elements.snackbar.classList.remove("visible");
+  elements.snackbarUndo.dataset.id = "";
+  elements.snackbarMessage.textContent = "";
 }
