@@ -32,6 +32,7 @@ const state = {
   monsterLibrary: [],
   monsterByName: new Map(),
   nodes: new Map(),
+  pendingDamage: new Map(),
   swipeDelete: null,
   selectedEnemyId: null,
   deleteUndo: null
@@ -127,7 +128,12 @@ elements.list.addEventListener("click", event => {
     }
 
     if (button.dataset.damage) {
-      applyDamage(enemy.id, Number(button.dataset.damage));
+      addPendingDamage(enemy.id, Number(button.dataset.damage));
+      return;
+    }
+
+    if (button.classList.contains("damage-build-indicator")) {
+      resolvePendingDamage(enemy.id);
       return;
     }
 
@@ -398,6 +404,62 @@ function commitEnemyChange(enemy) {
   saveEnemies();
 }
 
+function ensureEnemyNodeStructure(node) {
+  const top = node.querySelector(".enemy-top");
+  if (top && !top.querySelector(".enemy-top-left")) {
+    const ordinal = top.querySelector(".enemy-ordinal");
+    const health = top.querySelector(".health-stat");
+    const shield = top.querySelector(".shield-stat");
+
+    const left = document.createElement("div");
+    left.className = "enemy-top-left";
+    if (ordinal) left.appendChild(ordinal);
+    if (health) left.appendChild(health);
+
+    const right = document.createElement("div");
+    right.className = "enemy-top-right";
+    if (shield) right.appendChild(shield);
+
+    top.insertBefore(left, top.firstChild);
+    top.appendChild(right);
+  }
+
+  const bodyInner = node.querySelector(".enemy-body-inner");
+  if (bodyInner && !bodyInner.querySelector(".damage-build-row")) {
+    const row = document.createElement("div");
+    row.className = "damage-build-row";
+    row.hidden = true;
+
+    const indicator = document.createElement("button");
+    indicator.type = "button";
+    indicator.className = "damage-build-indicator";
+    indicator.hidden = true;
+    indicator.setAttribute("aria-label", "Resolver golpe acumulado");
+
+    row.appendChild(indicator);
+    bodyInner.insertBefore(row, bodyInner.firstChild);
+  }
+}
+
+function updateDamageBuildIndicator(enemyId, damage) {
+  const node = state.nodes.get(enemyId);
+  if (!node) return;
+
+  const indicator = node.querySelector(".damage-build-indicator");
+  const row = node.querySelector(".damage-build-row");
+  if (!indicator) return;
+
+  const current = Math.max(0, toInt(damage, 0));
+  if (row) row.hidden = current <= 0;
+  indicator.hidden = current <= 0;
+  indicator.textContent = current > 0 ? `💥 ${current}` : "";
+}
+
+function clearPendingDamage(enemyId) {
+  state.pendingDamage.delete(enemyId);
+  updateDamageBuildIndicator(enemyId, 0);
+}
+
 function addEnemies() {
   const baseName = elements.name.value.trim();
   const health = toInt(elements.health.value, NaN);
@@ -466,12 +528,26 @@ function hasNumberedEnemy(baseName) {
   return state.enemies.some(enemy => numberedName.test(String(enemy.nombre)));
 }
 
-function applyDamage(enemyId, rawDamage) {
+function addPendingDamage(enemyId, rawDamage) {
   const enemy = findEnemy(enemyId);
   if (!enemy) return;
 
+  const nextDamage = Math.max(0, (state.pendingDamage.get(enemyId) || 0) + Math.max(0, rawDamage));
+  state.pendingDamage.set(enemyId, nextDamage);
+  updateDamageBuildIndicator(enemyId, nextDamage);
+}
+
+function resolvePendingDamage(enemyId) {
+  const enemy = findEnemy(enemyId);
+  if (!enemy) return;
+
+  const rawDamage = state.pendingDamage.get(enemyId) || 0;
+  if (rawDamage <= 0) return;
+
   const effectiveDamage = Math.max(0, rawDamage - enemy.escudo);
   enemy.vida = Math.max(0, enemy.vida - effectiveDamage);
+  state.pendingDamage.delete(enemyId);
+  updateDamageBuildIndicator(enemyId, 0);
   commitEnemyChange(enemy);
 }
 
@@ -489,6 +565,7 @@ function deleteEnemy(enemyId) {
   if (!enemy) return;
 
   clearSelectedEnemyIfNeeded(enemyId);
+  clearPendingDamage(enemyId);
   hideDeleteUndoSnackbar();
   const snapshot = cloneEnemy(enemy);
   state.enemies.splice(index, 1);
@@ -538,6 +615,7 @@ function renderList() {
     if (seenIds.has(id)) continue;
     node.remove();
     state.nodes.delete(id);
+    state.pendingDamage.delete(id);
   }
 }
 
@@ -547,6 +625,7 @@ function createEnemyNode(enemyId) {
   node.querySelectorAll(".quick-actions button").forEach((button, index) => {
     button.dataset.damage = QUICK_DAMAGE[index];
   });
+  ensureEnemyNodeStructure(node);
   return node;
 }
 
@@ -572,6 +651,7 @@ function updateEnemy(enemy) {
   node.querySelector(".health-value").className = "health-value " + healthClass;
   renderMonsterAttributes(attributesNode, enemy);
   node.querySelector(".shield-value").textContent = String(enemy.escudo);
+  updateDamageBuildIndicator(enemy.id, state.pendingDamage.get(enemy.id) || 0);
   syncEnemyBodyState(body, isExpanded);
   node.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }

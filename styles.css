@@ -400,20 +400,24 @@ h1 {
 
 .enemy-top {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   min-height: 32px;
 }
 
-.enemy-top > .enemy-ordinal {
-  grid-column: 1;
-  justify-self: start;
+.enemy-top-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
-.enemy-top > .health-stat {
-  grid-column: 2;
-  justify-self: start;
+.enemy-top-right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .monster-attributes {
@@ -421,7 +425,7 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  grid-column: 3;
+  grid-column: 2;
   justify-self: stretch;
   width: 100%;
   min-width: 0;
@@ -488,8 +492,6 @@ h1 {
 }
 
 .shield-stat {
-  grid-column: 4;
-  justify-self: end;
   flex-direction: row-reverse;
   flex-shrink: 0;
 }
@@ -571,6 +573,25 @@ h1 {
 .quick-actions button {
   padding: 0 4px;
   font-size: 16px;
+}
+
+.damage-build-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.damage-build-indicator {
+  width: auto;
+  min-width: 86px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 142, 180, .55);
+  background: rgba(255, 255, 255, .06);
+  color: #ff8fb2;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .01em;
 }
 
 .enemy.swipe-delete-active {
