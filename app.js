@@ -89,6 +89,11 @@ elements.level.addEventListener("change", () => {
   renderList();
 });
 elements.fullscreen.addEventListener("click", toggleFullscreen);
+elements.snackbarUndo.addEventListener("pointerup", event => {
+  event.preventDefault();
+  event.stopPropagation();
+  undoDeleteEnemy();
+});
 elements.snackbarUndo.addEventListener("click", undoDeleteEnemy);
 
 elements.list.addEventListener("click", event => {
