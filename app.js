@@ -22,8 +22,8 @@ const STATUS_ICONS = Object.freeze({
   Range: `${STATUS_ICON_BASE}range.svg`
 });
 const GROUP_STAT_ICONS = Object.freeze({
-  Move: "⟶",
-  Attack: `${STATUS_ICON_BASE}attack.svg`,
+  Move: `${STATUS_ICON_BASE}move.svg`,
+  Attack: `${STATUS_ICON_BASE}attack2.svg`,
   Range: `${STATUS_ICON_BASE}range.svg`
 });
 
@@ -501,10 +501,9 @@ function renderList() {
   });
 
   for (const group of groups.values()) {
-    group.header.querySelector(".enemy-group-indicator").textContent = group.collapsed ? "?" : "?";
+    group.header.querySelector(".enemy-group-indicator").textContent = group.collapsed ? "\u25ba" : "\u25bc";
     group.header.querySelector(".enemy-group-title-text").textContent = group.title;
     renderMonsterHeaderStats(group.statsNode, group.sourceEnemy);
-    group.header.querySelector(".enemy-group-count").textContent = "(" + group.count + ")";
     group.rows.hidden = group.collapsed;
   }
 
@@ -609,11 +608,9 @@ function createEnemyGroupNode(title, groupKey, collapsed) {
     <span class="enemy-group-indicator" aria-hidden="true"></span>
     <span class="enemy-group-title-text"></span>
     <span class="enemy-group-stats" aria-hidden="true"></span>
-    <span class="enemy-group-count"></span>
   `;
-  header.querySelector(".enemy-group-indicator").textContent = collapsed ? "▶" : "▼";
+  header.querySelector(".enemy-group-indicator").textContent = collapsed ? "\u25ba" : "\u25bc";
   header.querySelector(".enemy-group-title-text").textContent = title;
-  header.querySelector(".enemy-group-count").textContent = "(0)";
   const statsNode = header.querySelector(".enemy-group-stats");
 
   const rows = document.createElement("div");
@@ -647,20 +644,6 @@ function buildMonsterStatChip(label, icon, normalValue, eliteValue) {
   const chip = document.createElement("span");
   chip.className = "enemy-group-stat";
 
-  const iconNode = document.createElement(icon.endsWith(".svg") ? "img" : "span");
-  if (icon.endsWith(".svg")) {
-    iconNode.className = "enemy-group-stat-icon";
-    iconNode.src = icon;
-    iconNode.alt = "";
-    iconNode.decoding = "async";
-    iconNode.loading = "lazy";
-    iconNode.setAttribute("aria-hidden", "true");
-  } else {
-    iconNode.className = "enemy-group-stat-icon enemy-group-stat-icon--glyph";
-    iconNode.textContent = icon;
-    iconNode.setAttribute("aria-hidden", "true");
-  }
-
   const values = document.createElement("span");
   values.className = "enemy-group-stat-values";
 
@@ -668,12 +651,20 @@ function buildMonsterStatChip(label, icon, normalValue, eliteValue) {
   normal.className = "enemy-group-stat-value enemy-group-stat-value--normal";
   normal.textContent = formatMonsterStatValue(normalValue);
 
+  const separatorIcon = document.createElement("img");
+  separatorIcon.className = "enemy-group-stat-icon";
+  separatorIcon.src = icon;
+  separatorIcon.alt = "";
+  separatorIcon.decoding = "async";
+  separatorIcon.loading = "lazy";
+  separatorIcon.setAttribute("aria-hidden", "true");
+
   const elite = document.createElement("span");
   elite.className = "enemy-group-stat-value enemy-group-stat-value--elite";
   elite.textContent = formatMonsterStatValue(eliteValue);
 
-  values.append(normal, elite);
-  chip.append(iconNode, values);
+  values.append(normal, separatorIcon, elite);
+  chip.append(values);
   chip.title = label + " Normal " + formatMonsterStatValue(normalValue) + " / Elite " + formatMonsterStatValue(eliteValue);
   return chip;
 }

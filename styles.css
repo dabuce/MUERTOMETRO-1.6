@@ -316,8 +316,9 @@ h1 {
   min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-left: auto;
   overflow: hidden;
   white-space: nowrap;
   pointer-events: none;
@@ -327,29 +328,21 @@ h1 {
 .enemy-group-stat {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 0;
   flex: 0 0 auto;
 }
 
 .enemy-group-stat-icon {
-  width: 1.05em;
-  height: 1.05em;
+  width: 1em;
+  height: 1em;
   flex: 0 0 auto;
   display: block;
-}
-
-.enemy-group-stat-icon--glyph {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  font-size: 1.1em;
 }
 
 .enemy-group-stat-values {
   display: inline-flex;
   align-items: baseline;
-  gap: .18em;
+  gap: .34em;
   flex: 0 0 auto;
 }
 
@@ -674,12 +667,12 @@ h1 {
   }
 
   .enemy-group-stats {
-    gap: 6px;
+    gap: 8px;
     font-size: .8em;
   }
 
   .enemy-group-stat {
-    gap: 2px;
+    gap: 0;
   }
 
   .enemy-group-stat-icon {

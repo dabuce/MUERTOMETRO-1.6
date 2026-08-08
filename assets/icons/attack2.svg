@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 233.4 233.4">
+  <!-- Generator: Adobe Illustrator 29.7.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 8)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+      }
+
+      .st1 {
+        fill: none;
+      }
+
+      .st2 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st1" x="-33.3" y="-32.87" width="300" height="300"/>
+    </clipPath>
+  </defs>
+  <g id="svg5" inkscape:version="1.2.2 (b0a8486541, 2022-12-01)">
+    <sodipodi:namedview id="namedview30" bordercolor="#666666" borderopacity="1.0" inkscape:current-layer="svg5" inkscape:cx="132.48207" inkscape:cy="154.36527" inkscape:deskcolor="#d1d1d1" inkscape:document-units="mm" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:showpageshadow="2" inkscape:window-height="1011" inkscape:window-maximized="1" inkscape:window-width="1854" inkscape:window-x="0" inkscape:window-y="0" inkscape:zoom="2.5361922" pagecolor="#ffffff" showgrid="false"/>
+    <g id="layer1">
+      <g id="g2728">
+        <g id="g2730">
+          <path id="path2732" class="st0" d="M68.59,213.06l-6.91,4.93-50.89-46.96,4.36-7.28,13.99,12.91,87.35-94.65,29.86-6.83-4.42,30.31-87.35,94.65,13.99,12.91h.02Z"/>
+        </g>
+        <g id="g2734">
+          <g class="st2">
+            <g id="g2736">
+              <g id="g2742">
+                <path id="path2744" class="st0" d="M38.86,204.95l-25.63,27.77s-4.42.64-8.96-3.56C-.28,224.96,0,220.51,0,220.51l25.63-27.77,13.23,12.21Z"/>
+              </g>
+              <g id="g2746">
+                <path id="path2748" class="st0" d="M63.45,113.81l10.05-6.24-18.66-23.44,38.41-4.15,1.73-34.46,22.4,14.07,35.49-17.19,4.75,39.73,26.8,6.72-22.18,13.19,15.94,28.41-30.96-.94-2.71,38.64-24.36-18.69-5.47,10.49,42.11,63.1,6.44-76.62,62.59,21.95-38.57-61.08,46.13-21.03-56.65-19.03-3.41-65.75-54.94,38.76L72.83,7.7l2.6,54.32L.87,65.23l62.57,48.58h.01Z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
