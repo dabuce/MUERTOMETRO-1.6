@@ -347,6 +347,7 @@ h1 {
 }
 
 .enemy-group-stat-value {
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
